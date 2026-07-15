@@ -1,0 +1,18 @@
+# IntelliJ
+.idea/
+
+# Frontend
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.env
+Frontend/.env.local
+
+# Java
+**/target/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

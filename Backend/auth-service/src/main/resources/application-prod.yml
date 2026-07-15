@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+userdb:
+  datasource:
+    url: ${USERDB_DATASOURCE_URL}
+    username: ${USERDB_DATASOURCE_USERNAME}
+    password: ${USERDB_DATASOURCE_PASSWORD}
+
+jwt:
+  secret: ${JWT_SECRET}

@@ -1,0 +1,38 @@
+export const mockAuditLogs = [
+  {
+    id: "AUD-001",
+    timestamp: "2026-06-05 10:45",
+    userName: "Dr. Ahmed Hassan",
+    role: "Doctor",
+    hospital: "Addis General Hospital",
+    actionType: "Viewed Patient Record",
+    targetRecord: "PT-1042",
+  },
+  {
+    id: "AUD-002",
+    timestamp: "2026-06-05 10:47",
+    userName: "Dr. Ahmed Hassan",
+    role: "Doctor",
+    hospital: "Addis General Hospital",
+    actionType: "Diagnosis Added",
+    targetRecord: "PT-1042",
+  },
+  {
+    id: "AUD-003",
+    timestamp: "2026-06-05 10:52",
+    userName: "John Doe",
+    role: "Patient",
+    hospital: "Addis General Hospital",
+    actionType: "Viewed Timeline",
+    targetRecord: "PT-1042",
+  },
+  {
+    id: "AUD-004",
+    timestamp: "2026-06-05 11:01",
+    userName: "System Admin",
+    role: "Admin",
+    hospital: "TenaLink Platform",
+    actionType: "Created Doctor Account",
+    targetRecord: "DOC-014",
+  },
+];

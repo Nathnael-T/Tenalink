@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/appointment_db
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:2001}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+userdb:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: ${USERDB_DATASOURCE_USERNAME:postgres}
+    password: ${USERDB_DATASOURCE_PASSWORD:2001}
+
+jwt:
+  secret: ${JWT_SECRET:9a4f2c8d3e1b7a6f5c8d3e1b7a6f5c8d3e1b7a6f5c8d3e1b7a6f5c8d3e1b7a6f}
+
+app:
+  seed:
+    enabled: false

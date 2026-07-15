@@ -1,0 +1,66 @@
+Documentation structure
+File	Sections covered
+docs/README.md
+Index + unanswered questions
+docs/01-overview-and-stack.md
+§1 Executive Summary, §2 Technology Stack
+docs/02-architecture.md
+§3 Architecture (Mermaid diagrams)
+docs/03-project-structure.md
+§4 Folder structure
+docs/04-configuration.md
+§5 Configuration + env var tables
+docs/05-database.md
+§6 Database (7 DBs, tables, ER diagrams)
+docs/06-backend-services.md
+§7 Backend modules
+docs/07-api-reference.md
+§8 API (38 endpoints from controllers)
+docs/08-authentication-authorization.md
+§9 Auth (sequence diagrams)
+docs/09-frontend.md
+§10 Frontend
+docs/10-business-logic.md
+§11 Business workflows
+docs/11-code-quality.md
+§12–14 Code org, errors, security
+docs/12-operations.md
+§15–17 Performance, testing, deployment
+docs/13-dependencies.md
+§18 Dependencies
+docs/14-developer-guide.md
+§19 Developer guide
+docs/15-user-guide.md
+§20 User guide
+docs/16-limitations-and-roadmap.md
+§21–22 Limitations & roadmap
+docs/17-code-walkthrough.md
+§23 Startup → shutdown
+docs/18-glossary.md
+§24 Glossary
+README.md
+§25 Polished project README
+
+
+
+Findings documented (not assumed)
+8 microservices on ports 8080–8088 (8084 unused), 7 PostgreSQL databases
+38 REST endpoints from actual controllers (corrects outdated Backend/API.md)
+No tests, Docker, or CI/CD in the repo
+Security gap: all services use permitAll(); only auth-service parses JWT
+Register page uses localStorage only — backend POST /auth/register is not called
+Doctor approve/reject is UI-only; no status update endpoint
+Admin /hospitals uses static mock data; super-admin hospitals use the API
+Demo credentials in seed SQL (admin1@, doctor1@, patient1@) differ from older README examples
+Questions that need your input
+License — no LICENSE file in the repo
+Production URLs and deployment topology
+CI/CD — how builds/deploys are automated
+Monitoring/logging in production
+Intended registration flow — backend API vs localStorage page
+Authoritative demo credentials — seed SQL vs README
+Whether /auth/refresh and /auth/me are planned (documented but not implemented)
+HIPAA/compliance requirements for medical data
+Project ownership and contribution process
+Multi-tenancy — is per-hospital admin isolation required?
+If you want changes, say which sections to expand (e.g. OpenAPI export, runbooks, or architecture decision records).
