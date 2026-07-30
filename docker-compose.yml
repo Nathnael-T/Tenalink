@@ -1,15 +1,17 @@
 services:
-  # Frontend service (Vite React app served via Nginx)
+  # Frontend service (Vite React app with hot reload)
   frontend:
     build:
       context: ./Frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: tenalink-frontend
     ports:
-      - "3000:80"
+      - "3000:5173"
+    volumes:
+      - ./Frontend/src:/app/src
+      - ./Frontend/public:/app/public
     environment:
-      - NGINX_HOST=frontend
-      - NGINX_PORT=80
+      - VITE_HOST=0.0.0.0
     depends_on:
       backend:
         condition: service_healthy
@@ -21,20 +23,37 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    develop:
+      watch:
+        - path: ./Frontend/src
+          action: sync
+          target: /app/src
+        - path: ./Frontend/public
+          action: sync
+          target: /app/public
 
-  # Backend service (Spring Boot gateway and microservices)
+  # Backend service (Spring Boot gateway and microservices with hot reload)
   backend:
     build:
       context: ./Backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: tenalink-backend
     ports:
       - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ./Backend/gateway-service/src:/app/gateway-service/src
+      - ./Backend/auth-service/src:/app/auth-service/src
+      - ./Backend/user-service/src:/app/user-service/src
+      - ./Backend/medical-records-service/src:/app/medical-records-service/src
+      - ./Backend/appointment-service/src:/app/appointment-service/src
+      - ./Backend/pharmacy-service/src:/app/pharmacy-service/src
+      - ./Backend/admin-service/src:/app/admin-service/src
+      - ./Backend/hospital-service/src:/app/hospital-service/src
+      - m2-cache:/root/.m2
     environment:
-      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
-      # Add service-specific configs here:
-      # - SPRING_PROFILES_ACTIVE=docker
-      # - DATABASE_URL=jdbc:postgresql://postgres:5432/tenalink
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - MAVEN_OPTS=-Dspotless.check.skip=true
     depends_on:
       - postgres
     networks:
@@ -45,6 +64,32 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    develop:
+      watch:
+        - path: ./Backend/gateway-service/src
+          action: sync
+          target: /app/gateway-service/src
+        - path: ./Backend/auth-service/src
+          action: sync
+          target: /app/auth-service/src
+        - path: ./Backend/user-service/src
+          action: sync
+          target: /app/user-service/src
+        - path: ./Backend/medical-records-service/src
+          action: sync
+          target: /app/medical-records-service/src
+        - path: ./Backend/appointment-service/src
+          action: sync
+          target: /app/appointment-service/src
+        - path: ./Backend/pharmacy-service/src
+          action: sync
+          target: /app/pharmacy-service/src
+        - path: ./Backend/admin-service/src
+          action: sync
+          target: /app/admin-service/src
+        - path: ./Backend/hospital-service/src
+          action: sync
+          target: /app/hospital-service/src
 
   # PostgreSQL database (placeholder for microservices)
   postgres:
@@ -74,6 +119,8 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  m2-cache:
     driver: local
 
 networks:
