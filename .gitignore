@@ -14,5 +14,19 @@ Frontend/.env.local
 *.log
 
 # OS files
-.DS_Store
+.DS_Store 
 Thumbs.db
+
+# VS Code
+.vscode/
+
+# Maven
+**/target/
+
+# Frontend
+Frontend/node_modules/
+Frontend/dist/
+
+# Environment files
+**/.env
+**/.env.local
