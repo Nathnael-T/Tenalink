@@ -30,6 +30,13 @@ COPY hospital-service/src hospital-service/src
 # Expose ports: 8080 for app, 5005 for debug
 EXPOSE 8080 5005
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
 # Run gateway-service with spring-boot:run (enables hot reload with devtools)
 # devtools watches for changes and auto-restarts the app
 CMD ["mvn", "-pl", "gateway-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]

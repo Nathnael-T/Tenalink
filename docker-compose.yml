@@ -32,66 +32,7 @@ services:
           action: sync
           target: /app/public
 
-  # Backend service (Spring Boot gateway and microservices with hot reload)
-  backend:
-    build:
-      context: ./Backend
-      dockerfile: Dockerfile.dev
-    container_name: tenalink-backend
-    ports:
-      - "8080:8080"
-      - "5005:5005"
-    volumes:
-      - ./Backend/gateway-service/src:/app/gateway-service/src
-      - ./Backend/auth-service/src:/app/auth-service/src
-      - ./Backend/user-service/src:/app/user-service/src
-      - ./Backend/medical-records-service/src:/app/medical-records-service/src
-      - ./Backend/appointment-service/src:/app/appointment-service/src
-      - ./Backend/pharmacy-service/src:/app/pharmacy-service/src
-      - ./Backend/admin-service/src:/app/admin-service/src
-      - ./Backend/hospital-service/src:/app/hospital-service/src
-      - m2-cache:/root/.m2
-    environment:
-      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - MAVEN_OPTS=-Dspotless.check.skip=true
-    depends_on:
-      - postgres
-    networks:
-      - tenalink-network
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    develop:
-      watch:
-        - path: ./Backend/gateway-service/src
-          action: sync
-          target: /app/gateway-service/src
-        - path: ./Backend/auth-service/src
-          action: sync
-          target: /app/auth-service/src
-        - path: ./Backend/user-service/src
-          action: sync
-          target: /app/user-service/src
-        - path: ./Backend/medical-records-service/src
-          action: sync
-          target: /app/medical-records-service/src
-        - path: ./Backend/appointment-service/src
-          action: sync
-          target: /app/appointment-service/src
-        - path: ./Backend/pharmacy-service/src
-          action: sync
-          target: /app/pharmacy-service/src
-        - path: ./Backend/admin-service/src
-          action: sync
-          target: /app/admin-service/src
-        - path: ./Backend/hospital-service/src
-          action: sync
-          target: /app/hospital-service/src
-
-  # PostgreSQL database (placeholder for microservices)
+  # PostgreSQL database
   postgres:
     image: postgres:16-alpine
     container_name: tenalink-postgres
@@ -116,6 +57,275 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  # Auth service
+  auth-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-auth-service
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./Backend/auth-service/src:/app/auth-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "auth-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8081"]
+    develop:
+      watch:
+        - path: ./Backend/auth-service/src
+          action: sync
+          target: /app/auth-service/src
+
+  # User service
+  user-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-user-service
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./Backend/user-service/src:/app/user-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "user-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8082"]
+    develop:
+      watch:
+        - path: ./Backend/user-service/src
+          action: sync
+          target: /app/user-service/src
+
+  # Appointment service
+  appointment-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-appointment-service
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./Backend/appointment-service/src:/app/appointment-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "appointment-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8083"]
+    develop:
+      watch:
+        - path: ./Backend/appointment-service/src
+          action: sync
+          target: /app/appointment-service/src
+
+  # Pharmacy service
+  pharmacy-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-pharmacy-service
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./Backend/pharmacy-service/src:/app/pharmacy-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "pharmacy-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8085"]
+    develop:
+      watch:
+        - path: ./Backend/pharmacy-service/src
+          action: sync
+          target: /app/pharmacy-service/src
+
+  # Medical records service
+  medical-records-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-medical-records-service
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./Backend/medical-records-service/src:/app/medical-records-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "medical-records-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8086"]
+    develop:
+      watch:
+        - path: ./Backend/medical-records-service/src
+          action: sync
+          target: /app/medical-records-service/src
+
+  # Admin service
+  admin-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-admin-service
+    ports:
+      - "8087:8087"
+    volumes:
+      - ./Backend/admin-service/src:/app/admin-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "admin-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8087"]
+    develop:
+      watch:
+        - path: ./Backend/admin-service/src
+          action: sync
+          target: /app/admin-service/src
+
+  # Hospital service
+  hospital-service:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-hospital-service
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./Backend/hospital-service/src:/app/hospital-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      - postgres
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ["mvn", "-pl", "hospital-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8088"]
+    develop:
+      watch:
+        - path: ./Backend/hospital-service/src
+          action: sync
+          target: /app/hospital-service/src
+
+  # Gateway service (API Gateway)
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.dev
+    container_name: tenalink-backend
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ./Backend/gateway-service/src:/app/gateway-service/src
+      - m2-cache:/root/.m2
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - MAVEN_OPTS=-Dspotless.check.skip=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+      appointment-service:
+        condition: service_started
+      pharmacy-service:
+        condition: service_started
+      medical-records-service:
+        condition: service_started
+      admin-service:
+        condition: service_started
+      hospital-service:
+        condition: service_started
+    networks:
+      - tenalink-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    command: ["mvn", "-pl", "gateway-service", "spring-boot:run"]
+    develop:
+      watch:
+        - path: ./Backend/gateway-service/src
+          action: sync
+          target: /app/gateway-service/src
 
 volumes:
   postgres_data:
