@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../app/providers/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { DashboardWidget } from '../../features/doctor/components/DashboardWidget';
-import { getAppointmentsByDoctor } from '../../api/appointments.api';
-import { patientApi } from '../../api/patient.api';
-import { getTimelineEvents } from '../../api/timeline.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 function computeAge(dateOfBirth) {
   if (!dateOfBirth) return null;
@@ -44,56 +42,10 @@ export function DoctorDashboardPage() {
       try {
         setLoading(true);
         setError('');
-        const appointments = await getAppointmentsByDoctor(doctorId);
-        if (!Array.isArray(appointments) || appointments.length === 0) {
-          if (mounted) {
-            setRecentPatients([]);
-            setRecentActivity([]);
-          }
-          return;
+        if (mounted) {
+          setRecentPatients([]);
+          setRecentActivity([]);
         }
-        const sortedAppts = [...appointments].sort(
-          (a, b) => new Date(b.scheduledAt) - new Date(a.scheduledAt)
-        );
-        const seenPatientIds = new Set();
-        const uniquePatientIds = [];
-        for (const appt of sortedAppts) {
-          if (appt.patientId && !seenPatientIds.has(appt.patientId)) {
-            seenPatientIds.add(appt.patientId);
-            uniquePatientIds.push(appt.patientId);
-          }
-        }
-        const topPatientIds = uniquePatientIds.slice(0, 3);
-        const patientResults = await Promise.allSettled(
-          topPatientIds.map((pid) => patientApi.getProfile(pid))
-        );
-        const patients = patientResults
-          .filter((r) => r.status === 'fulfilled' && r.value)
-          .map((r) => r.value);
-        const mappedPatients = patients.map((p) => {
-          const age = computeAge(p.dateOfBirth);
-          const name = p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim() || 'Unknown';
-          return { id: p.id, name, age, gender: p.gender, summaryRoute: `/doctor/patients/${p.id}` };
-        });
-        if (mounted) setRecentPatients(mappedPatients);
-        const timelineResults = await Promise.allSettled(
-          topPatientIds.map((pid) => getTimelineEvents(pid))
-        );
-        const allEvents = [];
-        timelineResults.forEach((result, idx) => {
-          if (result.status === 'fulfilled' && Array.isArray(result.value)) {
-            const patient = mappedPatients[idx];
-            for (const evt of result.value) {
-              allEvents.push({ ...evt, patientName: patient?.name || 'Unknown', patientId: topPatientIds[idx] });
-            }
-          }
-        });
-        allEvents.sort((a, b) => {
-          const dateA = new Date(a.timestamp || a.occurredAt || 0);
-          const dateB = new Date(b.timestamp || b.occurredAt || 0);
-          return dateB - dateA;
-        });
-        if (mounted) setRecentActivity(allEvents.slice(0, 3));
       } catch (loadError) {
         if (mounted) setError(loadError?.message || 'Failed to load dashboard data.');
       } finally {
@@ -109,15 +61,11 @@ export function DoctorDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <header className="space-y-2">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-teal-700">
-          Doctor Workspace
-        </p>
-        <h1 className="text-3xl font-bold text-slate-900">Doctor dashboard</h1>
-        <p className="text-slate-600">
-          A quick summary of recent patients, clinical activity, and follow-up priorities.
-        </p>
-      </header>
+      <PageHeader
+        badge="Doctor Workspace"
+        title="Doctor dashboard"
+        subtitle="A quick summary of recent patients, clinical activity, and follow-up priorities."
+      />
 
       {error && (
         <ErrorAlert
@@ -168,7 +116,7 @@ export function DoctorDashboardPage() {
               {recentPatients.length === 0 ? (
                 <EmptyState
                   title="No recent patients"
-                  description="Patients will appear once appointments are scheduled."
+                  description="Patients will appear here as they are added to your care list."
                   icon={LayoutList}
                 />
               ) : (

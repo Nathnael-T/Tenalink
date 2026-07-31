@@ -8,7 +8,6 @@ healthcare-platform/                    ← parent POM (this repo)
 ├── healthcare-common/                  ← shared library (JWT, exceptions, events)
 ├── auth-service/                       ← port 8081, DB auth_db
 ├── user-service/                       ← port 8082, DB user_db
-├── appointment-service/                ← port 8083, DB appointment_db
 ├── hospital-service/                   ← port 8084, DB hospital_db
 ├── pharmacy-service/                   ← port 8085, DB pharmacy_db
 ├── medical-record-service/             ← port 8086, DB medical_record_db
@@ -39,7 +38,6 @@ To split into separate repos later:
 |---------|---------|------|----------|----------|
 | auth-service | `com.healthcare.auth` | 8081 | `auth_db` | Login, Register |
 | user-service | `com.healthcare.user` | 8082 | `user_db` | Profile |
-| appointment-service | `com.healthcare.appointment` | 8083 | `appointment_db` | Appointments |
 | hospital-service | `com.healthcare.hospital` | 8084 | `hospital_db` | Hospitals |
 | pharmacy-service | `com.healthcare.pharmacy` | 8085 | `pharmacy_db` | Pharmacy |
 | medical-record-service | `com.healthcare.medicalrecord` | 8086 | `medical_record_db` | Medical History |
@@ -72,7 +70,7 @@ Shared **only** for cross-cutting technical concerns — not domain entities.
 - `com.healthcare.common.dto.ApiErrorResponse`
 - `com.healthcare.common.event.UserRegisteredEvent`
 
-Each service defines its own `UserId` / `AppointmentId` in its bounded context.
+Each service defines its own `UserId` in its bounded context.
 
 ---
 
@@ -80,10 +78,10 @@ Each service defines its own `UserId` / `AppointmentId` in its bounded context.
 
 ### Synchronous (implemented example)
 
-**appointment-service → hospital-service** via `WebClient`:
+**Hospital service** can be called from other services via `WebClient`:
 
 ```java
-// appointment-service/infrastructure/external/HospitalServiceClient.java
+// hospital-service/infrastructure/external/HospitalServiceClient.java
 GET {hospital-service}/api/v1/hospitals/{id}
 ```
 
@@ -126,7 +124,7 @@ public interface HospitalClient {
 
 1. **auth-service** issues JWT (`JwtTokenUtil` + shared secret).
 2. Client sends `Authorization: Bearer <token>` to gateway or services.
-3. Resource services (`appointment-service`, etc.) validate with `JwtAuthenticationFilter` + `healthcare-common`.
+3. Resource services validate with `JwtAuthenticationFilter` + `healthcare-common`.
 
 Use the **same** `healthcare.jwt.secret` in every service (or switch to OAuth2 / JWKS later).
 
@@ -140,7 +138,6 @@ mvn clean install
 
 # Run individually (separate terminals)
 mvn -pl auth-service spring-boot:run
-mvn -pl appointment-service spring-boot:run
 mvn -pl api-gateway spring-boot:run
 
 # Via gateway
@@ -154,7 +151,6 @@ curl http://localhost:8080/api/v1/auth/login -H "Content-Type: application/json"
 See source trees for:
 
 - **auth-service** — complete onion layers, JWT, Flyway, MapStruct `UserMapper`
-- **appointment-service** — complete onion layers, JWT filter, `HospitalServiceClient` (WebClient)
 
 Other services include `pom.xml`, `application.yml`, main class, and `STRUCTURE.md` for the remaining layers.
 

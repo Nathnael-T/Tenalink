@@ -120,37 +120,6 @@ services:
           action: sync
           target: /app/user-service/src
 
-  # Appointment service
-  appointment-service:
-    build:
-      context: ./Backend
-      dockerfile: Dockerfile.dev
-    container_name: tenalink-appointment-service
-    ports:
-      - "8083:8083"
-    volumes:
-      - ./Backend/appointment-service/src:/app/appointment-service/src
-      - m2-cache:/root/.m2
-    environment:
-      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0
-      - MAVEN_OPTS=-Dspotless.check.skip=true
-    depends_on:
-      - postgres
-    networks:
-      - tenalink-network
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    command: ["mvn", "-pl", "appointment-service", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-Dserver.port=8083"]
-    develop:
-      watch:
-        - path: ./Backend/appointment-service/src
-          action: sync
-          target: /app/appointment-service/src
-
   # Pharmacy service
   pharmacy-service:
     build:
@@ -296,8 +265,6 @@ services:
       auth-service:
         condition: service_started
       user-service:
-        condition: service_started
-      appointment-service:
         condition: service_started
       pharmacy-service:
         condition: service_started

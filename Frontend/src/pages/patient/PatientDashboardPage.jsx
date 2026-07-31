@@ -1,7 +1,6 @@
 import {
   Activity,
   Building2,
-  CalendarDays,
   FileText,
   Pill,
 } from 'lucide-react';
@@ -12,7 +11,6 @@ import { Link } from 'react-router-dom';
 import { PatientDashboardWidget } from '../../features/patient/components/PatientDashboardWidget';
 import { useAuth } from '../../app/providers/AuthContext';
 import { patientApi } from '../../api/patient.api';
-import { getAppointments } from '../../api/appointments.api';
 import { getTimelineEvents } from '../../api/timeline.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
@@ -21,7 +19,6 @@ import { SkeletonStatCard } from '../../components/shared/SkeletonCard';
 export function PatientDashboardPage() {
   const { patientId } = useAuth();
   const [profile, setProfile] = useState(null);
-  const [appointments, setAppointments] = useState([]);
   const [timelineEvents, setTimelineEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,18 +36,12 @@ export function PatientDashboardPage() {
       try {
         setError('');
         setLoading(true);
-        const [profileData, appointmentsData, timelineData] = await Promise.all([
+        const [profileData, timelineData] = await Promise.all([
           patientApi.getProfile(patientId),
-          getAppointments(patientId),
           getTimelineEvents(patientId)
         ]);
         if (mounted) {
           setProfile(profileData);
-          setAppointments(
-            (Array.isArray(appointmentsData) ? appointmentsData : []).sort(
-              (a, b) => new Date(b.scheduledAt || b.createdAt || 0) - new Date(a.scheduledAt || a.createdAt || 0)
-            )
-          );
           setTimelineEvents(
             (Array.isArray(timelineData) ? timelineData : []).sort(
               (a, b) => new Date(b.occurredAt || b.timestamp || 0) - new Date(a.occurredAt || a.timestamp || 0)
@@ -61,7 +52,6 @@ export function PatientDashboardPage() {
         if (mounted) {
           setError(loadError?.message || 'Unable to load dashboard.');
           setProfile(null);
-          setAppointments([]);
           setTimelineEvents([]);
         }
       } finally {
@@ -100,24 +90,6 @@ const conditions = useMemo(() => {
 
 
 
-  const nextAppointment = useMemo(() => {
-    if (!appointments.length) {
-      return null;
-    }
-
-    const upcoming = appointments
-      .map((appointment) => ({
-        ...appointment,
-        dateTime: new Date(
-          `${appointment.date || ''}T${appointment.time || '00:00'}`
-        )
-      }))
-      .filter((appointment) => appointment.dateTime >= new Date())
-      .sort((a, b) => a.dateTime - b.dateTime);
-
-    return upcoming[0] || null;
-  }, [appointments]);
-
   const recentActivity = useMemo(() => {
     if (!timelineEvents.length) {
       return [];
@@ -138,11 +110,7 @@ const conditions = useMemo(() => {
       to: '/patient/history/timeline',
       icon: FileText
     },
-    {
-      label: 'Appointments',
-      to: '/patient/appointments',
-      icon: CalendarDays
-    },
+
     {
       label: 'Medications',
       to: '/patient/history/prescriptions',
@@ -184,15 +152,14 @@ const conditions = useMemo(() => {
             </h1>
             <p className="mt-3 max-w-2xl text-teal-50">
               Here's your healthcare summary for today.
-              Stay on top of appointments, records,
-              medications and your overall wellness.
+              Stay on top of records, medications, and your overall wellness.
             </p>
           </div>
           <Link
             to="/patient/hospitals"
             className="rounded-xl bg-white px-6 py-3 text-center font-semibold text-teal-700 transition hover:bg-slate-100"
           >
-            Book Appointment
+            Browse Hospitals
           </Link>
         </div>
       </section>
@@ -206,17 +173,11 @@ const conditions = useMemo(() => {
             // Trigger re-fetch via patientId change not possible, so reload inline
             (async () => {
               try {
-                const [profileData, appointmentsData, timelineData] = await Promise.all([
+                const [profileData, timelineData] = await Promise.all([
                   patientApi.getProfile(patientId),
-                  getAppointments(patientId),
                   getTimelineEvents(patientId)
                 ]);
                 setProfile(profileData);
-                setAppointments(
-                  (Array.isArray(appointmentsData) ? appointmentsData : []).sort(
-                    (a, b) => new Date(b.scheduledAt || b.createdAt || 0) - new Date(a.scheduledAt || a.createdAt || 0)
-                  )
-                );
                 setTimelineEvents(
                   (Array.isArray(timelineData) ? timelineData : []).sort(
                     (a, b) => new Date(b.occurredAt || b.timestamp || 0) - new Date(a.occurredAt || a.timestamp || 0)
@@ -230,41 +191,6 @@ const conditions = useMemo(() => {
             })();
           }}
         />
-      )}
-
-      {/* UPCOMING APPOINTMENT */}
-      {nextAppointment && (
-        <PatientDashboardWidget
-          title="Upcoming Appointment"
-          description="Your next scheduled healthcare visit."
-        >
-          <div className="rounded-2xl border border-blue-100 bg-blue-50 p-6">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  {nextAppointment.title}
-                </h3>
-                <p className="mt-2 text-slate-600">
-                  {nextAppointment.when}
-                </p>
-                <p className="text-slate-600">
-                  {nextAppointment.location}
-                </p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <span className="rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-blue-700 shadow">
-                  {nextAppointment.status}
-                </span>
-                <Link
-                  to="/patient/appointments"
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-center text-white transition hover:bg-blue-700"
-                >
-                  View Details
-                </Link>
-              </div>
-            </div>
-          </div>
-        </PatientDashboardWidget>
       )}
 
       {/* HEALTH SNAPSHOT */}

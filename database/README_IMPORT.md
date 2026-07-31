@@ -15,10 +15,9 @@ Import in this order so cross-service UUID references resolve correctly:
 | 1 | `auth_db` | `auth_db.sql` | — |
 | 2 | `user_db` | `user_db.sql` | `auth_db.users.id` (logical) |
 | 3 | `hospital_db` | `hospital_db.sql` | — |
-| 4 | `appointment_db` | `appointment_db.sql` | `user_db` patients/doctors, hospital UUID mapping |
-| 5 | `medical_record_db` | `medical_record_db.sql` | `user_db` patients/doctors |
-| 6 | `pharmacy_db` | `pharmacy_db.sql` | `user_db` patients/doctors, completed appointments |
-| 7 | `admin_db` | `admin_db.sql` | `auth_db` admin user IDs (logical) |
+| 4 | `medical_record_db` | `medical_record_db.sql` | `user_db` patients/doctors |
+| 5 | `pharmacy_db` | `pharmacy_db.sql` | `user_db` patients/doctors, completed care events |
+| 6 | `admin_db` | `admin_db.sql` | `auth_db` admin user IDs (logical) |
 
 ---
 
@@ -38,7 +37,6 @@ Run each script against its database:
 psql -d auth_db            -f database/auth_db.sql
 psql -d user_db            -f database/user_db.sql
 psql -d hospital_db        -f database/hospital_db.sql
-psql -d appointment_db     -f database/appointment_db.sql
 psql -d medical_record_db  -f database/medical_record_db.sql
 psql -d pharmacy_db        -f database/pharmacy_db.sql
 psql -d admin_db           -f database/admin_db.sql
@@ -54,7 +52,6 @@ $env:PGUSER = "postgres"
 psql -d auth_db            -f database\auth_db.sql
 psql -d user_db            -f database\user_db.sql
 psql -d hospital_db        -f database\hospital_db.sql
-psql -d appointment_db     -f database\appointment_db.sql
 psql -d medical_record_db  -f database\medical_record_db.sql
 psql -d pharmacy_db        -f database\pharmacy_db.sql
 psql -d admin_db           -f database\admin_db.sql
@@ -63,7 +60,7 @@ psql -d admin_db           -f database\admin_db.sql
 **One-liner (bash):**
 
 ```bash
-for db in auth_db user_db hospital_db appointment_db medical_record_db pharmacy_db admin_db; do
+for db in auth_db user_db hospital_db medical_record_db pharmacy_db admin_db; do
   psql -d "$db" -f "database/${db}.sql" || exit 1
 done
 ```
@@ -87,9 +84,6 @@ TRUNCATE TABLE patients, doctors RESTART IDENTITY CASCADE;
 
 -- hospital_db
 TRUNCATE TABLE hospitals RESTART IDENTITY CASCADE;
-
--- appointment_db
-TRUNCATE TABLE appointments RESTART IDENTITY CASCADE;
 
 -- medical_record_db
 TRUNCATE TABLE medical_events RESTART IDENTITY CASCADE;
@@ -121,9 +115,6 @@ SELECT COUNT(*) AS patients FROM patients;
 -- hospital_db
 SELECT id, name, specialty FROM hospitals ORDER BY id;
 
--- appointment_db
-SELECT status, COUNT(*) FROM appointments GROUP BY status ORDER BY status;
-
 -- medical_record_db
 SELECT event_type, COUNT(*) FROM medical_events GROUP BY event_type ORDER BY event_type;
 
@@ -138,10 +129,7 @@ SELECT config_key, config_value FROM system_config ORDER BY config_key;
 **Cross-service integrity (run from any DB with `\c` as needed):**
 
 ```sql
--- All appointment patient_ids exist in user_db.patients (manual check)
--- Compare appointment_db.appointments.patient_id against user_db.patients.id
-
--- Hospital UUID mapping used in appointments:
+-- Hospital UUID mapping used in care flows:
 -- h1 -> 60000001-0001-4001-8001-000000000001
 -- h2 -> 60000001-0001-4001-8001-000000000002
 -- h3 -> 60000001-0001-4001-8001-000000000003
@@ -159,7 +147,6 @@ SELECT config_key, config_value FROM system_config ORDER BY config_key;
 | `user_db` | `doctors` | **8** |
 | `user_db` | `patients` | **15** |
 | `hospital_db` | `hospitals` | **5** |
-| `appointment_db` | `appointments` | **25** |
 | `medical_record_db` | `medical_events` | **40** |
 | `pharmacy_db` | `prescriptions` | **20** |
 | `admin_db` | `audit_logs` | **50** |
@@ -173,14 +160,6 @@ SELECT config_key, config_value FROM system_config ORDER BY config_key;
 | `ROLE_ADMIN` | 6 |
 | `ROLE_PROVIDER` | 8 |
 | `ROLE_PATIENT` | 15 |
-
-### Appointment status breakdown
-
-| Status | Count |
-|--------|------:|
-| `COMPLETED` | 10 |
-| `SCHEDULED` | 10 |
-| `CANCELLED` | 5 |
 
 ---
 
@@ -202,9 +181,8 @@ Passwords are BCrypt-hashed (strength 10). Plaintext passwords for development:
 - **Ethiopian names** for all users; Addis Ababa hospital addresses and `+251` phone numbers.
 - **Patients** include blood type, allergies (JSON array), chronic conditions, and emergency contacts embedded in `chronic_conditions` JSON (no dedicated column in schema).
 - **Hospitals** include coordinates, wait times, and facility flags (`icu_available`, `lab_available`, etc.).
-- **Appointments** include denormalized `patient_name`, `doctor_name`, `hospital_name`, `date`, `time`, and `reason` fields.
 - **Medical events** cover `DIAGNOSIS`, `LAB_RESULT`, `PRESCRIPTION`, `VITALS`, `ALLERGY`, `VISIT_CREATED`, and `DOCUMENT` types.
-- **Prescriptions** are linked to patients/doctors from completed appointments; statuses `ACTIVE` and `FULFILLED`.
+- **Prescriptions** are linked to patients/doctors from completed care events; statuses `ACTIVE` and `FULFILLED`.
 - **Audit logs** reference real admin user UUIDs from `auth_db`.
 - All timestamps fall within the last year (Aug 2025 – Jun 2026).
 
@@ -214,6 +192,6 @@ Passwords are BCrypt-hashed (strength 10). Plaintext passwords for development:
 
 1. **Keep seeders disabled:** Leave `app.seed.enabled: false` in `application-dev.yml` for all services.
 2. **No Flyway changes:** Schema is defined by existing migrations only.
-3. **Hospital ID types:** `hospital_db.hospitals.id` is `VARCHAR` (`h1`–`h5`). `appointment_db` and `medical_record_db` use deterministic UUIDs mapped to those hospitals (see mapping above).
+3. **Hospital ID types:** `hospital_db.hospitals.id` is `VARCHAR` (`h1`–`h5`). `medical_record_db` uses deterministic UUIDs mapped to those hospitals (see mapping above).
 4. **Re-import is safe:** Scripts use `TRUNCATE` + `INSERT` in transactions; re-running replaces all development data.
 5. **Start services after import:** Run each microservice so Flyway validates schema, then verify via API or verification queries above.

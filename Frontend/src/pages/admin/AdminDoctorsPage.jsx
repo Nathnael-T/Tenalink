@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Stethoscope, Mail, Phone } from 'lucide-react';
 import { getUsersByRole } from '../../api/users.api';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function AdminDoctorsPage() {
   const [doctors, setDoctors] = useState([]);
@@ -39,22 +40,17 @@ export function AdminDoctorsPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Doctor Management</h1>
-          <p className="mt-2 text-slate-600">Loading doctors...</p>
-        </div>
+        <PageHeader title="Doctor Management" subtitle="Loading doctors..." />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Doctor Management</h1>
-        <p className="mt-2 text-slate-600">
-          View all registered doctors on the platform.
-        </p>
-      </div>
+      <PageHeader
+        title="Doctor Management"
+        subtitle="View all registered doctors on the platform."
+      />
 
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">

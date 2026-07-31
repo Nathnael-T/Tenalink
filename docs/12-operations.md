@@ -15,7 +15,7 @@ This document covers sections 15–17.
 | Technique | Usage |
 |-----------|-------|
 | Indexes | `idx_user_role`, `idx_audit_timestamp`, `idx_hospital_specialty`, `idx_appt_doctor_id`, `idx_appt_patient_id` |
-| Pagination | User list, appointments admin, audit logs, hospitals |
+| Pagination | User list, care workflows admin, audit logs, hospitals |
 | `open-in-view: false` | Set in all services — good practice to avoid lazy-loading in views |
 
 ## Lazy Loading
@@ -39,7 +39,7 @@ Standard Spring Boot Tomcat thread pool per service. **No explicit concurrency c
 ## Performance Bottlenecks (Inferred)
 
 1. **Multiple service startup** — 8 JVM processes required locally
-2. **N+1 cross-service patterns** — doctor dashboard fetches profile per appointment patient
+2. **N+1 cross-service patterns** — doctor dashboard fetches profile per care workflow patient
 3. **Full list endpoints** — doctors, users by role without pagination
 4. **No CDN/static asset strategy** documented for frontend
 5. **Gateway single point** — all traffic through one process

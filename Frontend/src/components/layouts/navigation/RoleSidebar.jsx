@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Building2,
-  CalendarDays,
   ClipboardList,
   FileClock,
   LayoutDashboard,
@@ -19,12 +18,10 @@ import { ROLES } from '../../../constants/roles';
 const navItemsByRole = {
   [ROLES.DOCTOR]: [
     { label: 'Dashboard', path: '/doctor/dashboard', icon: LayoutDashboard },
-    { label: 'Patients', path: '/doctor/patients', icon: Users },
-    { label: 'Appointments', path: '/doctor/appointments', icon: CalendarDays }
+    { label: 'Patients', path: '/doctor/patients', icon: Users }
   ],
   [ROLES.PATIENT]: [
     { label: 'Dashboard', path: '/patient/dashboard', icon: LayoutDashboard },
-    { label: 'Appointments', path: '/patient/appointments', icon: CalendarDays },
     { label: 'Medical History', path: '/patient/history', icon: ClipboardList },
     { label: 'Profile', path: '/patient/profile', icon: User }
   ],
@@ -32,7 +29,6 @@ const navItemsByRole = {
     { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Doctors', path: '/admin/doctors', icon: Stethoscope },
     { label: 'Patients', path: '/admin/patients', icon: Users },
-    { label: 'Appointments', path: '/admin/appointments', icon: CalendarDays },
     { label: 'Audit Logs', path: '/admin/audit-logs', icon: FileClock },
     { label: 'System Settings', path: '/admin/settings', icon: ClipboardList }
   ],

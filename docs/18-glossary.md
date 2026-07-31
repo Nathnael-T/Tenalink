@@ -15,13 +15,13 @@
 | **Super Admin** | Backend `ROLE_SUPER_ADMIN` — platform-wide administration |
 | **Patient record** | Row in `user_db.patients` linked to `auth_db.users` via `user_id` |
 | **Doctor record** | Row in `user_db.doctors` linked to auth user |
-| **Appointment** | Scheduled encounter linking patient, doctor, and hospital |
+| **Care workflow** | Scheduled encounter linking patient, doctor, and hospital |
 | **Medical event** | Timeline entry in `medical_record_db` with typed JSON payload |
 | **Prescription** | Medication order in `pharmacy_db` |
 | **Audit log** | Immutable record of an administrative action |
 | **System config** | Platform key-value configuration in `admin_db` |
 | **Flyway** | Database migration tool; SQL files in `db/migration/` |
-| **Denormalized fields** | Copied names on appointments (patientName, etc.) for display without joins |
+| **Denormalized fields** | Copied names on care workflows (patientName, etc.) for display without joins |
 | **Database-per-service** | Pattern where each microservice owns its PostgreSQL schema/database |
 | **UserDbConfig** | Secondary JDBC configuration for cross-reads of `user_db` |
 | **Seeder** | `CommandLineRunner` that populates demo data when `app.seed.enabled=true` |
@@ -31,7 +31,7 @@
 | **PHI** | Protected Health Information — **Needs developer input** on handling policies |
 | **ICU / Lab / Radiology flags** | Boolean hospital capability fields on `hospitals` table |
 | **Timeline** | Chronological view of `medical_events` for a patient |
-| **SCHEDULED** | Default backend appointment status on creation |
+| **SCHEDULED** | Default backend care workflow status on creation |
 | **permitAll** | Spring Security config allowing unauthenticated access to all endpoints |
 
 ## Role Mapping Reference
@@ -50,7 +50,7 @@
 | gateway-service | 8080 |
 | auth-service | 8081 |
 | user-service | 8082 |
-| appointment-service | 8083 |
+| legacy placeholder | 8083 |
 | pharmacy-service | 8085 |
 | medical-records-service | 8086 |
 | admin-service | 8087 |
@@ -62,7 +62,7 @@
 |---------|----------|
 | auth-service | `auth_db` |
 | user-service | `user_db` |
-| appointment-service | `appointment_db` |
+| legacy placeholder | `legacy placeholder_db` |
 | pharmacy-service | `pharmacy_db` |
 | medical-records-service | `medical_record_db` |
 | admin-service | `admin_db` |

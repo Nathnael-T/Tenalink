@@ -19,7 +19,6 @@ Controllers call use case interfaces. Application services coordinate operations
 - `auth-service`
 - `user-service`
 - `medical-records-service`
-- `appointment-service`
 - `pharmacy-service`
 - `admin-service`
 

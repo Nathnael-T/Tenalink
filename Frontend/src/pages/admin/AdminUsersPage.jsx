@@ -3,6 +3,7 @@ import { getUsers } from '../../api/users.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
 import { SkeletonTable } from '../../components/shared/SkeletonCard';
+import { PageHeader } from '../../components/shared/PageHeader';
 import { Users } from 'lucide-react';
 
 const ROLE_LABELS = {
@@ -59,10 +60,7 @@ export function AdminUsersPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">User Management</h1>
-          <p className="mt-2 text-slate-600">Loading users...</p>
-        </div>
+        <PageHeader title="User Management" subtitle="Loading users..." />
         <SkeletonTable rows={5} cols={5} />
       </div>
     );
@@ -70,12 +68,10 @@ export function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">User Management</h1>
-        <p className="mt-2 text-slate-600">
-          View and manage all platform users across roles.
-        </p>
-      </div>
+      <PageHeader
+        title="User Management"
+        subtitle="View and manage all platform users across roles."
+      />
 
       {error && (
         <ErrorAlert

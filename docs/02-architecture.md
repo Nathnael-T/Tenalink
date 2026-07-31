@@ -43,7 +43,6 @@ flowchart TB
   subgraph services [Service Tier]
     AUTH[auth-service :8081]
     USER[user-service :8082]
-    APPT[appointment-service :8083]
     PHARM[pharmacy-service :8085]
     MED[medical-records-service :8086]
     ADMIN[admin-service :8087]
@@ -53,7 +52,6 @@ flowchart TB
   subgraph data [Data Tier]
     ADB[(auth_db)]
     UDB[(user_db)]
-    APDB[(appointment_db)]
     PDB[(pharmacy_db)]
     MRDB[(medical_record_db)]
     ADDB[(admin_db)]
@@ -61,12 +59,10 @@ flowchart TB
   end
 
   Browser -->|HTTPS REST /api/v1| GW
-  GW --> AUTH & USER & APPT & PHARM & MED & ADMIN & HOSP
+  GW --> AUTH & USER & PHARM & MED & ADMIN & HOSP
   AUTH --> ADB
   AUTH -.->|JDBC| UDB
   USER --> UDB
-  APPT --> APDB
-  APPT -.->|JDBC| UDB
   PHARM --> PDB
   PHARM -.->|JDBC| UDB
   MED --> MRDB
@@ -119,28 +115,19 @@ flowchart LR
   apiClient --> Gateway
 ```
 
-## Data Flow — Appointment Booking
+## Data Flow — Care Record Access
 
 ```mermaid
 sequenceDiagram
   participant P as Patient Portal
   participant G as Gateway
-  participant H as hospital-service
-  participant D as user-service
-  participant A as appointment-service
+  participant M as medical-records-service
+  participant U as user-service
 
-  P->>G: GET /hospitals
-  G->>H: Forward
-  H-->>P: Hospital list
-
-  P->>G: GET /doctors?hospitalId=
-  G->>D: Forward
-  D-->>P: Doctor list
-
-  P->>G: POST /appointments
-  G->>A: Forward
-  A->>A: Set status SCHEDULED
-  A-->>P: AppointmentEntity
+  P->>G: GET /medical-events
+  G->>M: Forward
+  M->>U: Resolve patient/doctor references
+  M-->>P: Medical timeline payload
 ```
 
 ## Deployment Architecture (Documented)
@@ -167,7 +154,7 @@ No Docker or Kubernetes manifests exist in the repository.
 gateway-service
   └── spring-cloud-starter-gateway, actuator
 
-auth-service, user-service, appointment-service, pharmacy-service,
+auth-service, user-service, pharmacy-service,
 medical-records-service, admin-service, hospital-service
   └── spring-boot-starter-web
   └── spring-boot-starter-data-jpa
@@ -187,8 +174,8 @@ See [08 — Authentication & Authorization](./08-authentication-authorization.md
 There are **no foreign keys across databases**. Relationships are logical UUID/string references:
 
 - `users.id` (auth_db) ↔ `patients.user_id` / `doctors.user_id` (user_db)
-- `appointments.patient_id` / `doctor_id` → IDs in user_db
-- `appointments.hospital_id` → `hospitals.id` (hospital_db)
+- `medical_events.patient_id`, `author_id` → user_db IDs
+- `prescriptions.patient_id`, `doctor_id` → user_db IDs
 - `medical_events.patient_id`, `author_id` → user_db IDs
 - `prescriptions.patient_id`, `doctor_id` → user_db IDs
 - `audit_logs.admin_id` → `users.id` (auth_db)

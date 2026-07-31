@@ -35,11 +35,11 @@ index.html → src/app/main.jsx → App.jsx → AuthProvider → LanguageProvide
 | Path | Component |
 |------|-----------|
 | `/patient/dashboard` | `PatientDashboardPage` |
-| `/patient/appointments` | `AppointmentsPage` |
+| `/patient/care workflows` | `Care workflowsPage` |
 | `/patient/profile` | `ProfilePage` |
 | `/patient/hospitals` | `HospitalsPage` (API-backed) |
 | `/patient/doctors` | `DoctorsPage` |
-| `/patient/book-appointment` | `BookAppointmentPage` |
+| `/patient/book-care workflow` | `BookCare workflowPage` |
 | `/patient/history/timeline` | `PatientTimelinePage` |
 | `/patient/history/prescriptions` | `PrescriptionsPage` |
 | `/patient/history/labs` | `LabsPage` |
@@ -55,7 +55,7 @@ index.html → src/app/main.jsx → App.jsx → AuthProvider → LanguageProvide
 | `/doctor/patients/:patientId/timeline` | `DoctorPatientTimelinePage` |
 | `/doctor/patients/:patientId/add-event` | `AddMedicalEventPage` |
 | `/doctor/patients/:patientId/prescribe` | `CreatePrescriptionPage` |
-| `/doctor/appointments` | `DoctorAppointmentsPage` |
+| `/doctor/care workflows` | `DoctorCare workflowsPage` |
 | `/doctor/prescriptions` | `DoctorPrescriptionsPage` |
 
 ### Admin routes (`AdminRoutes.jsx`)
@@ -66,7 +66,7 @@ index.html → src/app/main.jsx → App.jsx → AuthProvider → LanguageProvide
 | `/admin/hospitals` | `HospitalsPage` (shared) | **Static mock data** |
 | `/admin/doctors` | `AdminDoctorsPage` | API |
 | `/admin/patients` | `AdminPatientsPage` | API |
-| `/admin/appointments` | `AdminAppointmentsPage` | API |
+| `/admin/care workflows` | `AdminCare workflowsPage` | API |
 | `/admin/settings` | `AdminSettingsPage` | API (read-only) |
 | `/admin/users` | `AdminUsersPage` | API (not in sidebar) |
 | `/admin/audit-logs` | `AuditLogsPage` | API |
@@ -185,7 +185,7 @@ useEffect(() => {
 |------|------------|
 | `LoginPage` | Client-side required fields; errors from `signIn` |
 | `RegisterPage` | Fayda 12 digits, password ≥8 chars; **localStorage only** |
-| `BookAppointmentPage` | Doctor required, date/time/reason required before submit |
+| `BookCare workflowPage` | Doctor required, date/time/reason required before submit |
 | `AddMedicalEventPage` | Event type and required fields per template |
 | `CreatePrescriptionPage` | Medication/dosage required |
 
@@ -220,7 +220,7 @@ No form library (React Hook Form, Formik) detected.
 
 ### Patient (`features/patient/`)
 
-- `AppointmentCard`, `PatientDashboardWidget`
+- `Care workflowCard`, `PatientDashboardWidget`
 - Legacy `*Storage.js` files (localStorage era)
 
 ### Audit (`features/Audit/`)
@@ -244,6 +244,6 @@ return children;
 
 ## Status Label Mismatch
 
-Frontend appointment pages use statuses like `Pending`, `Confirmed`, `Rejected`. Backend uses `SCHEDULED`, `COMPLETED`, `CANCELLED`. Filtering and display may not align with API data.
+Frontend care workflow pages use statuses like `Pending`, `Confirmed`, `Rejected`. Backend uses `SCHEDULED`, `COMPLETED`, `CANCELLED`. Filtering and display may not align with API data.
 
 See [10 — Business Logic](./10-business-logic.md).

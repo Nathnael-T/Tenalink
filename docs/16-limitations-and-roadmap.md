@@ -21,8 +21,8 @@
 
 | Feature | Status |
 |---------|--------|
-| Doctor approve/reject appointments | UI only, no backend |
-| Appointment status update endpoint | Frontend API defined, backend missing |
+| Doctor approve/reject care workflows | UI only, no backend |
+| Care workflow status update endpoint | Frontend API defined, backend missing |
 | Refresh tokens | Not implemented |
 | Hospital-scoped admin views | Admin sees all platform data |
 | Department / staff management | Not implemented |
@@ -70,12 +70,12 @@ See [11 — Code Quality §14](./11-code-quality.md#14-security). Summary:
 | Improvement | Rationale |
 |-------------|-----------|
 | Enforce JWT + role authorization on all services | Critical security gap |
-| Implement appointment status workflow (accept/reject/complete) | Core clinical workflow broken |
+| Implement care workflow status workflow (accept/reject/complete) | Core clinical workflow broken |
 | Wire registration to `POST /auth/register` | Users cannot self-register for real |
 | Remove mock data from admin hospitals page | Data integrity |
 | Add hospital/tenant scoping for hospital admins | Multi-tenant requirement |
 | Introduce TanStack Query (or equivalent) for API state | Cross-portal consistency |
-| Add automated test suite (auth, appointments, API smoke) | No safety net for changes |
+| Add automated test suite (auth, care workflows, API smoke) | No safety net for changes |
 | Fix frontend/backend mismatches (patient PUT, audit pagination) | Active bugs |
 
 ## Medium Priority
@@ -91,7 +91,7 @@ See [11 — Code Quality §14](./11-code-quality.md#14-security). Summary:
 | Department and staff management APIs | Admin portal completeness |
 | Centralized logging (ELK, CloudWatch) | Operations visibility |
 | Rate limiting on gateway | Abuse prevention |
-| Align appointment status enums frontend/backend | UX correctness |
+| Align care workflow status enums frontend/backend | UX correctness |
 
 ## Low Priority
 

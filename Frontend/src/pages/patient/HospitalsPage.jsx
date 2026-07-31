@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Hospital } from 'lucide-react';
 import { getHospitals } from '../../api/hospitals.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function HospitalsPage() {
   const [hospitals, setHospitals] = useState([]);
@@ -43,20 +44,11 @@ export function HospitalsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <Link
-          to="/patient/appointments"
-          className="inline-block rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800"
-        >
-          Back to Appointments
-        </Link>
-
-        <h1 className="mt-3 text-3xl font-bold text-slate-900">Hospitals</h1>
-
-        <p className="mt-2 text-slate-600">
-          Select a hospital to view available doctors and book an appointment.
-        </p>
-      </div>
+      <PageHeader
+        title="Hospitals"
+        subtitle="Select a hospital to view available doctors and continue your care journey."
+        secondaryAction={{ label: 'Back to Dashboard', to: '/patient/dashboard' }}
+      />
 
       {error && <ErrorAlert message={error} />}
 

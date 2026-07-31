@@ -3,6 +3,7 @@ import { Users } from 'lucide-react';
 import { getUsersByRole } from '../../api/users.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function AdminPatientsPage() {
   const [patients, setPatients] = useState([]);
@@ -28,10 +29,10 @@ export function AdminPatientsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-neutral-900 mb-2">Patients</h1>
-        <p className="text-neutral-600">Manage patient accounts and information</p>
-      </div>
+      <PageHeader
+        title="Patients"
+        subtitle="Manage patient accounts and information"
+      />
 
       {error && <ErrorAlert message={error} onRetry={() => window.location.reload()} />}
 

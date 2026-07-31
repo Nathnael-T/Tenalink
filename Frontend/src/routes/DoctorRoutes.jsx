@@ -5,7 +5,6 @@
   import { DoctorPatientSummaryPage } from '../pages/doctor/DoctorPatientSummaryPage';
   import { DoctorPatientTimelinePage } from '../pages/doctor/DoctorPatientTimelinePage';
   import { AddMedicalEventPage } from '../pages/doctor/AddMedicalEventPage';
-  import { DoctorAppointmentsPage } from '../pages/doctor/DoctorAppointmentsPage';
   import { CreatePrescriptionPage } from '../pages/doctor/CreatePrescriptionPage';
   import { DoctorPrescriptionsPage } from '../pages/doctor/DoctorPrescriptionsPage';
 
@@ -45,11 +44,6 @@
         <Route
           path="patients/:patientId/prescribe"
           element={<CreatePrescriptionPage />}
-        />
-
-        <Route
-          path="appointments"
-          element={<DoctorAppointmentsPage />}
         />
 
         <Route

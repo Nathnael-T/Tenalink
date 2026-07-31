@@ -3,6 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 import { getUsersByRole } from '../../api/users.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 const ROLE_LABELS = {
   ROLE_ADMIN: 'Hospital Admin',
@@ -35,12 +36,10 @@ export function SuperAdminHospitalAdminsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Hospital Admins</h1>
-        <p className="mt-2 text-slate-600">
-          Manage hospital administrator accounts across the platform.
-        </p>
-      </div>
+      <PageHeader
+        title="Hospital Admins"
+        subtitle="Manage hospital administrator accounts across the platform."
+      />
 
       {error && <ErrorAlert message={error} onRetry={() => window.location.reload()} />}
 

@@ -12,7 +12,7 @@ Tenalink/
 │   ├── gateway-service/              # API gateway (:8080)
 │   ├── auth-service/                 # Auth & users (:8081, auth_db)
 │   ├── user-service/                 # Patients & doctors (:8082, user_db)
-│   ├── appointment-service/          # Appointments (:8083, appointment_db)
+│   ├── legacy placeholder/          # Care workflows (:8083, legacy placeholder_db)
 │   ├── pharmacy-service/             # Prescriptions (:8085, pharmacy_db)
 │   ├── medical-records-service/      # Medical events (:8086, medical_record_db)
 │   ├── admin-service/                # Audit & config (:8087, admin_db)
@@ -42,7 +42,7 @@ Tenalink/
 ├── database/                         # SQL seed/import scripts per DB
 │   ├── auth_db.sql
 │   ├── user_db.sql
-│   ├── appointment_db.sql
+│   ├── legacy placeholder_db.sql
 │   ├── pharmacy_db.sql
 │   ├── medical_record_db.sql
 │   ├── admin_db.sql
@@ -79,13 +79,13 @@ Tenalink/
 | Database | `user_db` |
 | Interacts with | Gateway; frontend via `/patients/**`, `/doctors/**` |
 
-### `Backend/appointment-service/`
+### `Backend/legacy placeholder/`
 
-| Responsibility | Appointment lifecycle, admin appointment views |
+| Responsibility | Care workflow lifecycle, admin care workflow views |
 |----------------|------------------------------------------------|
-| Key packages | `AppointmentController`, `AdminAppointmentController`, `service/`, `bootstrap/` |
-| Databases | `appointment_db`, `user_db` (JDBC in seeder) |
-| Interacts with | Gateway; `/appointments/**`, `/admin/appointments/**` |
+| Key packages | `Care workflowController`, `AdminCare workflowController`, `service/`, `bootstrap/` |
+| Databases | `legacy placeholder_db`, `user_db` (JDBC in seeder) |
+| Interacts with | Gateway; `/care workflows/**`, `/admin/care workflows/**` |
 
 ### `Backend/pharmacy-service/`
 
@@ -160,7 +160,7 @@ Page components organized by role: `admin/`, `doctor/`, `patient/`, `super-admin
 
 ### `Frontend/src/api/`
 
-Axios wrappers per domain: `apiClient.js`, `auth.api.js`, `appointments.api.js`, `hospitals.api.js`, etc.
+Axios wrappers per domain: `apiClient.js`, `auth.api.js`, `care workflows.api.js`, `hospitals.api.js`, etc.
 
 ### `Frontend/src/components/`
 

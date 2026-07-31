@@ -12,7 +12,7 @@ Manual seed data is available in `database/*.sql` at the repository root.
 |----------|---------|--------|
 | `auth_db` | auth-service | `users` |
 | `user_db` | user-service | `patients`, `doctors` |
-| `appointment_db` | appointment-service | `appointments` |
+| `legacy placeholder_db` | legacy placeholder | `care workflows` |
 | `pharmacy_db` | pharmacy-service | `prescriptions` |
 | `medical_record_db` | medical-records-service | `medical_events` |
 | `admin_db` | admin-service | `audit_logs`, `system_config` |
@@ -111,13 +111,13 @@ erDiagram
 
 ---
 
-## appointment_db
+## legacy placeholder_db
 
-### Table: `appointments`
+### Table: `care workflows`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| `id` | UUID | PRIMARY KEY | Appointment ID |
+| `id` | UUID | PRIMARY KEY | Care workflow ID |
 | `patient_id` | UUID | NOT NULL | References user_db.patients.id |
 | `doctor_id` | UUID | NOT NULL | References user_db.doctors.id |
 | `hospital_id` | VARCHAR(255) | NOT NULL | References hospital_db.hospitals.id (was UUID in V1, VARCHAR in V3) |
@@ -132,7 +132,7 @@ erDiagram
 
 **Indexes:** `idx_appt_doctor_id`, `idx_appt_patient_id`
 
-**Migrations:** `V1__initial_schema.sql`, `V2__add_appointment_fields.sql`, `V3__update_hospital_id_type.sql`
+**Migrations:** `V1__initial_schema.sql`, `V2__add_care workflow_fields.sql`, `V3__update_hospital_id_type.sql`
 
 ---
 
@@ -232,9 +232,9 @@ erDiagram
 erDiagram
   users ||--o| patients : "user_id"
   users ||--o| doctors : "user_id"
-  patients ||--o{ appointments : "patient_id"
-  doctors ||--o{ appointments : "doctor_id"
-  hospitals ||--o{ appointments : "hospital_id"
+  patients ||--o{ care workflows : "patient_id"
+  doctors ||--o{ care workflows : "doctor_id"
+  hospitals ||--o{ care workflows : "hospital_id"
   patients ||--o{ prescriptions : "patient_id"
   doctors ||--o{ prescriptions : "doctor_id"
   patients ||--o{ medical_events : "patient_id"
@@ -251,7 +251,7 @@ erDiagram
 |---------|-----------------|
 | auth-service | V1 |
 | user-service | V1, V2 |
-| appointment-service | V1, V2, V3 |
+| legacy placeholder | V1, V2, V3 |
 | pharmacy-service | V1 |
 | medical-records-service | V1, V2 |
 | admin-service | V1, V2 |
@@ -269,7 +269,7 @@ Flyway config: `baseline-on-migrate: true` in dev profiles.
 |--------|---------|---------|
 | `UserDataSeeder` | auth-service | Demo users; JDBC inserts into user_db patients |
 | `HospitalSeeder` | hospital-service | 5 hospitals (h1–h5) |
-| `AppointmentSeeder` | appointment-service | Sample appointments |
+| `Care workflowSeeder` | legacy placeholder | Sample care workflows |
 | `PrescriptionSeeder` | pharmacy-service | Sample prescriptions |
 | `MedicalEventSeeder` | medical-records-service | Sample timeline events |
 | `AdminDataSeeder` | admin-service | Sample audit logs and config |
@@ -285,7 +285,7 @@ Idempotent TRUNCATE + INSERT scripts for all 7 databases. See `database/README_I
 Validation is primarily enforced at:
 
 1. **JPA** — `@Column(nullable = false)`, unique constraints
-2. **Service layer** — runtime checks (e.g., appointment date/time required)
-3. **Frontend** — form validation on register (localStorage path) and book appointment pages
+2. **Service layer** — runtime checks (e.g., care workflow date/time required)
+3. **Frontend** — form validation on register (localStorage path) and book care workflow pages
 
 No Bean Validation (`@Valid`, `@NotNull`) annotations were found on controller request DTOs.

@@ -96,7 +96,7 @@ Downstream URIs configurable via environment variables (see table below).
 | `CORS_ALLOWED_ORIGINS` | No | `http://localhost:5173` | Comma-separated allowed origins |
 | `AUTH_SERVICE_URL` | No | `http://localhost:8081` | auth-service upstream |
 | `USER_SERVICE_URL` | No | `http://localhost:8082` | user-service upstream |
-| `APPOINTMENT_SERVICE_URL` | No | `http://localhost:8083` | appointment-service upstream |
+| `CARE_WORKFLOW_SERVICE_URL` | No | `http://localhost:8083` | legacy placeholder upstream |
 | `PHARMACY_SERVICE_URL` | No | `http://localhost:8085` | pharmacy-service upstream |
 | `MEDICAL_RECORDS_SERVICE_URL` | No | `http://localhost:8086` | medical-records-service upstream |
 | `ADMIN_SERVICE_URL` | No | `http://localhost:8087` | admin-service upstream |
@@ -116,7 +116,7 @@ Downstream URIs configurable via environment variables (see table below).
 | gateway-service | 8080 |
 | auth-service | 8081 |
 | user-service | 8082 |
-| appointment-service | 8083 |
+| legacy placeholder | 8083 |
 | pharmacy-service | 8085 |
 | medical-records-service | 8086 |
 | admin-service | 8087 |

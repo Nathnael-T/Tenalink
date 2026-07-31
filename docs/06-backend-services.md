@@ -7,7 +7,7 @@
 | gateway-service | 8080 | `com.tenalink.gateway.GatewayApplication` | — | — |
 | auth-service | 8081 | `com.tenalink.auth.AuthApplication` | auth_db | user_db (JDBC) |
 | user-service | 8082 | `com.tenalink.user.Application` | user_db | — |
-| appointment-service | 8083 | `com.tenalink.appointment.Application` | appointment_db | user_db (JDBC) |
+| legacy placeholder | 8083 | `com.tenalink.care workflow.Application` | legacy placeholder_db | user_db (JDBC) |
 | pharmacy-service | 8085 | `com.tenalink.pharmacy.Application` | pharmacy_db | user_db (JDBC) |
 | medical-records-service | 8086 | `com.tenalink.medicalrecords.Application` | medical_record_db | user_db (JDBC) |
 | admin-service | 8087 | `com.tenalink.admin.Application` | admin_db | — |
@@ -130,27 +130,27 @@
 
 ---
 
-## appointment-service
+## legacy placeholder
 
 ### Controllers
 
-#### `AppointmentController` (`/api/v1/appointments`)
+#### `Care workflowController` (`/api/v1/care workflows`)
 
 | Method | Responsibility |
 |--------|----------------|
-| `POST /` | Create appointment (`status=SCHEDULED`) |
+| `POST /` | Create care workflow (`status=SCHEDULED`) |
 | `GET /patient/{patientId}` | List by patient, `scheduledAt` DESC |
 | `GET /doctor/{doctorId}` | List by doctor, `scheduledAt` DESC |
 | `PUT /{id}/cancel` | Set status `CANCELLED` |
 
-#### `AdminAppointmentController` (`/api/v1/admin/appointments`)
+#### `AdminCare workflowController` (`/api/v1/admin/care workflows`)
 
 | Method | Responsibility |
 |--------|----------------|
-| `GET /` | Paginated all appointments, `scheduledAt` DESC |
+| `GET /` | Paginated all care workflows, `scheduledAt` DESC |
 | `GET /overview` | Count by status |
 
-### `AppointmentService`
+### `Care workflowService`
 
 - Parses `date` + `time` strings into `scheduledAt` Instant
 - Requires both date and time on create
@@ -158,7 +158,7 @@
 
 ### Bootstrap
 
-- `AppointmentSeeder` — sample appointments via JDBC for doctor/patient IDs
+- `Care workflowSeeder` — sample care workflows via JDBC for doctor/patient IDs
 
 ---
 

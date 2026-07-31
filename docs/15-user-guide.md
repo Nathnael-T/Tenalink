@@ -32,27 +32,27 @@ A **Register** page exists at `/register`. It currently stores accounts locally 
 
 ### Dashboard
 
-- Overview of upcoming appointments and recent medical activity
-- Quick links to book appointments and view history
+- Overview of upcoming care workflows and recent medical activity
+- Quick links to book care workflows and view history
 
 > 📷 *Screenshot placeholder: Patient dashboard*
 
-### Book an appointment
+### Book an care workflow
 
-1. Go to **Hospitals** (or use "Book Appointment" from dashboard)
+1. Go to **Hospitals** (or use "Book Care workflow" from dashboard)
 2. Browse available hospitals
 3. Select a hospital to view doctors
-4. Choose a doctor → **Book Appointment**
+4. Choose a doctor → **Book Care workflow**
 5. Enter date, time, and reason for visit
 6. Submit the request
 
-Your appointment is created with status **Scheduled** in the system.
+Your care workflow is created with status **Scheduled** in the system.
 
-### View appointments
+### View care workflows
 
-1. Navigate to **Appointments**
-2. View all appointments with status filters
-3. Click an appointment for details (doctor, hospital, date, reason)
+1. Navigate to **Care workflows**
+2. View all care workflows with status filters
+3. Click an care workflow for details (doctor, hospital, date, reason)
 
 **Note:** Status labels in the UI (Pending, Confirmed) may not match backend statuses.
 
@@ -80,17 +80,17 @@ Your appointment is created with status **Scheduled** in the system.
 
 ### Dashboard
 
-- Summary of appointments and patient activity
+- Summary of care workflows and patient activity
 
 ### Patients
 
 1. Open **Patients**
-2. View patients from your appointments
+2. View patients from your care workflows
 3. Click a patient for summary, timeline, add event, or prescribe
 
-### Appointment requests
+### Care workflow requests
 
-1. Open **Appointments**
+1. Open **Care workflows**
 2. Review pending requests
 
 **Current limitation:** Approve/Reject buttons do not update the backend. **Needs developer input** on expected workflow.
@@ -114,7 +114,7 @@ Your appointment is created with status **Scheduled** in the system.
 ### Dashboard
 
 - Platform user statistics
-- Appointment overview counts
+- Care workflow overview counts
 - Recent audit activity
 
 ### Doctors
@@ -125,9 +125,9 @@ Your appointment is created with status **Scheduled** in the system.
 
 - View all registered patients
 
-### Appointments
+### Care workflows
 
-- Table of all appointments across the platform
+- Table of all care workflows across the platform
 
 ### Audit logs
 
@@ -182,9 +182,9 @@ Click **Logout** in the sidebar footer. You are returned to the login page and y
 
 | If you are a… | You can… |
 |---------------|----------|
-| Patient | Book appointments, view your history and profile |
+| Patient | Book care workflows, view your history and profile |
 | Doctor | Manage your patients, add medical events, prescribe |
-| Hospital Admin | View platform-wide doctors, patients, appointments, audit |
+| Hospital Admin | View platform-wide doctors, patients, care workflows, audit |
 | Super Admin | Manage hospitals, admins, platform config, global audit |
 
 ---

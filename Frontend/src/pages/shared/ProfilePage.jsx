@@ -4,6 +4,7 @@ import { User } from 'lucide-react';
 import { useAuth } from '../../app/providers/AuthContext';
 import { patientApi } from '../../api/patient.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 function normalizeProfile(profile) {
   return {
@@ -125,15 +126,12 @@ export function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white">
-        <div className="flex items-center gap-3">
-          <User size={32} />
-          <div>
-            <h1 className="text-3xl font-bold">My Profile</h1>
-            <p className="text-blue-100">View and update your patient profile.</p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="My Profile"
+        subtitle="View and update your patient profile."
+        icon={User}
+        badge="Patient"
+      />
 
       {error && <ErrorAlert message={error} />}
       {success && (

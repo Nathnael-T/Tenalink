@@ -22,7 +22,6 @@
         <module>auth-service</module>
         <module>user-service</module>
         <module>medical-records-service</module>
-        <module>appointment-service</module>
         <module>pharmacy-service</module>
         <module>admin-service</module>
         <module>hospital-service</module>

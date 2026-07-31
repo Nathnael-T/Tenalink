@@ -139,7 +139,7 @@ export const patientTimelineEvents = [{
   title: 'Primary care visit created',
   facility: 'Landmark General Hospital',
   clinician: 'Dr. Alemayehu Worku',
-  summary: 'Routine primary care appointment added to longitudinal medical history.',
+  summary: 'Routine primary care update added to longitudinal medical history.',
   details: ['Preventive screening reviewed', 'Medication list reconciled'],
   metadata: [{
     label: 'Visit Type',

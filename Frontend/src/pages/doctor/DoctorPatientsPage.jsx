@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../app/providers/AuthContext';
-import { getAppointmentsByDoctor } from '../../api/appointments.api';
-import { patientApi } from '../../api/patient.api';
 import { PatientResultCard } from '../../features/doctor/components/PatientResultCard';
 import { PatientSearchFilters } from '../../features/doctor/components/PatientSearchFilters';
 
@@ -24,8 +22,8 @@ function computeAge(dateOfBirth) {
   return age;
 }
 
-function mapAppointmentToStatus(appointmentStatus) {
-  switch (appointmentStatus) {
+function mapPatientStatus(patientStatus) {
+  switch (patientStatus) {
     case 'COMPLETED':
       return 'Stable';
     case 'SCHEDULED':
@@ -34,7 +32,7 @@ function mapAppointmentToStatus(appointmentStatus) {
     case 'CANCELLED':
       return 'Cancelled';
     default:
-      return appointmentStatus || 'Unknown';
+      return patientStatus || 'Unknown';
   }
 }
 
@@ -66,61 +64,8 @@ export function DoctorPatientsPage() {
         setLoading(true);
         setError('');
 
-        const appointments = await getAppointmentsByDoctor(doctorId);
-
-        if (!Array.isArray(appointments) || appointments.length === 0) {
-          if (mounted) setPatients([]);
-          return;
-        }
-
-        const patientAppointmentMap = new Map();
-        for (const appt of appointments) {
-          const pid = appt.patientId;
-          if (!pid) continue;
-          const existing = patientAppointmentMap.get(pid);
-          if (!existing || new Date(appt.scheduledAt) > new Date(existing.scheduledAt)) {
-            patientAppointmentMap.set(pid, appt);
-          }
-        }
-
-        const patientIds = [...patientAppointmentMap.keys()];
-        const patientResults = await Promise.allSettled(
-          patientIds.map((pid) => patientApi.getProfile(pid))
-        );
-
-        const mapped = patientResults
-          .map((result, index) => {
-            if (result.status !== 'fulfilled' || !result.value) return null;
-            const patient = result.value;
-            const latestAppt = patientAppointmentMap.get(patientIds[index]);
-            const age = computeAge(patient.dateOfBirth);
-
-            return {
-              id: patient.id,
-              name: patient.fullName || `${patient.firstName || ''} ${patient.lastName || ''}`.trim() || 'Unknown Patient',
-              age: age ?? 'N/A',
-              gender: patient.gender || 'N/A',
-              hospital: latestAppt?.hospitalId
-                ? (HOSPITAL_LABELS[latestAppt.hospitalId] || latestAppt.hospitalId)
-                : 'Unknown Hospital',
-              status: mapAppointmentToStatus(latestAppt?.status),
-              lastVisit: latestAppt?.scheduledAt
-                ? new Date(latestAppt.scheduledAt).toLocaleDateString()
-                : 'N/A',
-              condition: latestAppt?.status === 'COMPLETED'
-                ? 'Follow-up completed'
-                : latestAppt?.status === 'SCHEDULED'
-                  ? 'Scheduled visit'
-                  : latestAppt?.status || 'No active condition',
-            };
-          })
-          .filter(Boolean);
-
         if (mounted) {
-          const sortedMapped = mapped.sort(
-            (a, b) => new Date(b.lastVisit !== 'N/A' ? b.lastVisit : 0) - new Date(a.lastVisit !== 'N/A' ? a.lastVisit : 0)
-          );
-          setPatients(sortedMapped);
+          setPatients([]);
         }
       } catch (loadError) {
         if (mounted) {
@@ -190,7 +135,7 @@ export function DoctorPatientsPage() {
             {!loading && !error && filteredPatients.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-600 shadow-sm">
                 {patients.length === 0
-                  ? 'No patients found. Patients will appear here once appointments are scheduled.'
+                  ? 'No patients found. Patients will appear here as they are added to your care list.'
                   : 'No patients match the current search. Try a different name, patient ID, hospital, or status.'}
               </div>
             ) : (

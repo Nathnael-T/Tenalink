@@ -116,7 +116,7 @@ export function SuperAdminSystemConfigPage() {
           <h2 className="mb-4 text-xl font-bold">Add Configuration</h2>
           <div className="grid gap-4 md:grid-cols-3">
             <input
-              placeholder="Config Key (e.g. max_appointments_per_day)"
+              placeholder="Config Key (e.g. max_care_events_per_day)"
               value={newConfig.configKey}
               onChange={e => setNewConfig({ ...newConfig, configKey: e.target.value })}
               className="rounded-lg border p-3"

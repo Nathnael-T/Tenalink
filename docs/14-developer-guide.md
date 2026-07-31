@@ -26,7 +26,7 @@ cd Tenalink
 ```sql
 CREATE DATABASE auth_db;
 CREATE DATABASE user_db;
-CREATE DATABASE appointment_db;
+CREATE DATABASE legacy placeholder_db;
 CREATE DATABASE pharmacy_db;
 CREATE DATABASE medical_record_db;
 CREATE DATABASE admin_db;
@@ -83,7 +83,7 @@ cd Backend
 mvn spring-boot:run -pl gateway-service
 mvn spring-boot:run -pl auth-service
 mvn spring-boot:run -pl user-service
-mvn spring-boot:run -pl appointment-service
+mvn spring-boot:run -pl legacy placeholder
 mvn spring-boot:run -pl pharmacy-service
 mvn spring-boot:run -pl medical-records-service
 mvn spring-boot:run -pl admin-service

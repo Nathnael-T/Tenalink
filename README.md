@@ -8,9 +8,9 @@ A multi-portal healthcare platform connecting **patients**, **doctors**, **hospi
 
 ## Features
 
-- **Patient portal** — Book appointments, view medical history (timeline, prescriptions, labs, documents), manage profile
-- **Doctor workspace** — Patient management, medical events, prescriptions, appointment requests
-- **Hospital admin console** — Doctors, patients, appointments, audit logs, settings
+- **Patient portal** — View medical history (timeline, prescriptions, labs, documents), manage profile
+- **Doctor workspace** — Patient management, medical events, prescriptions, care coordination
+- **Hospital admin console** — Doctors, patients, audit logs, settings
 - **Super admin console** — Hospital management, hospital admins, platform configuration, global audit
 - **Microservices API** — Domain-separated services with dedicated PostgreSQL databases
 - **JWT authentication** — Role-based portal routing with identity context (patient/doctor/admin IDs)
@@ -36,10 +36,10 @@ See [docs/01-overview-and-stack.md](./docs/01-overview-and-stack.md) for the com
 ```
 Frontend (React + Vite :5173)  →  Gateway (:8080)
                                       │
-        ┌─────────┬─────────┬─────────┼─────────┬─────────┬─────────┐
+        ┌─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
         ▼         ▼         ▼         ▼         ▼         ▼         ▼
-      Auth      User      Appt     Pharm    MedRec    Admin    Hospital
-      :8081     :8082     :8083    :8085     :8086     :8087     :8088
+      Auth      User      Pharm    MedRec    Admin    Hospital
+      :8081     :8082     :8085     :8086     :8087     :8088
 ```
 
 | Service | Port | Database |
@@ -47,7 +47,6 @@ Frontend (React + Vite :5173)  →  Gateway (:8080)
 | gateway-service | 8080 | — |
 | auth-service | 8081 | auth_db |
 | user-service | 8082 | user_db |
-| appointment-service | 8083 | appointment_db |
 | pharmacy-service | 8085 | pharmacy_db |
 | medical-records-service | 8086 | medical_record_db |
 | admin-service | 8087 | admin_db |
@@ -73,7 +72,6 @@ Diagrams and request flows: [docs/02-architecture.md](./docs/02-architecture.md)
 ```sql
 CREATE DATABASE auth_db;
 CREATE DATABASE user_db;
-CREATE DATABASE appointment_db;
 CREATE DATABASE pharmacy_db;
 CREATE DATABASE medical_record_db;
 CREATE DATABASE admin_db;
@@ -137,7 +135,6 @@ cd Backend
 mvn spring-boot:run -pl gateway-service &
 mvn spring-boot:run -pl auth-service &
 mvn spring-boot:run -pl user-service &
-mvn spring-boot:run -pl appointment-service &
 mvn spring-boot:run -pl pharmacy-service &
 mvn spring-boot:run -pl medical-records-service &
 mvn spring-boot:run -pl admin-service &
@@ -194,7 +191,7 @@ Production checklist: [docs/12-operations.md](./docs/12-operations.md#17-deploym
 
 ```
 Tenalink/
-├── Backend/           # 8 Spring Boot microservices (Maven)
+├── Backend/           # 7 Spring Boot microservices (Maven)
 ├── Frontend/          # React + Vite SPA
 ├── database/          # SQL seed/import scripts
 ├── docs/              # Full technical documentation
@@ -216,8 +213,6 @@ Gateway base URL: `http://localhost:8080/api/v1`
 | Context | `/context` | `GET /me` |
 | Patients | `/patients` | `GET /{id}`, `POST /{id}` |
 | Doctors | `/doctors` | `GET /`, `GET /{id}` |
-| Appointments | `/appointments` | `POST /`, `GET /patient/{id}`, `PUT /{id}/cancel` |
-| Admin appointments | `/admin/appointments` | `GET /`, `GET /overview` |
 | Prescriptions | `/prescriptions` | `POST /`, `GET /patient/{id}`, `PUT /{id}/fulfill` |
 | Medical records | `/records` | `POST /`, `GET /patient/{id}/timeline` |
 | Audit | `/audit-logs` | `GET /`, `POST /` |
@@ -264,7 +259,6 @@ General expectations:
 
 - Backend services use `permitAll()` — JWT not enforced on most endpoints
 - Register page does not call backend API
-- Doctor appointment approve/reject is not wired to backend
 - Admin hospitals page uses static mock data
 - No automated tests
 

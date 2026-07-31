@@ -30,7 +30,7 @@ sequenceDiagram
 | Gateway | `com.tenalink.gateway.GatewayApplication` |
 | Auth | `com.tenalink.auth.AuthApplication` |
 | User | `com.tenalink.user.Application` |
-| Appointment | `com.tenalink.appointment.Application` |
+| Care workflow | `com.tenalink.care workflow.Application` |
 | Pharmacy | `com.tenalink.pharmacy.Application` |
 | Medical records | `com.tenalink.medicalrecords.Application` |
 | Admin | `com.tenalink.admin.Application` |
@@ -112,13 +112,13 @@ RegisterRequest → UserEntity → auth_db.users
   → JWT returned
 ```
 
-### Appointment creation
+### Care workflow creation
 
 ```
-CreateRequest → AppointmentEntity
+CreateRequest → Care workflowEntity
   → parse date/time → scheduledAt
   → status = SCHEDULED
-  → appointment_db.appointments
+  → legacy placeholder_db.care workflows
 ```
 
 ### Medical event

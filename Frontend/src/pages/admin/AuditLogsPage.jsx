@@ -6,6 +6,7 @@ import { getAuditLogs, getAuditLogsByAdmin } from '../../api/admin.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
 import { SkeletonCard } from '../../components/shared/SkeletonCard';
+import { PageHeader } from '../../components/shared/PageHeader';
 import { FileText } from 'lucide-react';
 
 const ROLE_MAP = {
@@ -63,10 +64,7 @@ const AuditLogsPage = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Audit Logs</h1>
-          <p className="text-gray-500">Loading audit logs...</p>
-        </div>
+        <PageHeader title="Audit Logs" subtitle="Loading audit logs..." />
         <div className="space-y-4">
           <SkeletonCard lines={2} />
           <SkeletonCard lines={2} />
@@ -78,12 +76,10 @@ const AuditLogsPage = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Audit Logs</h1>
-        <p className="text-gray-500">
-          Audit logs are immutable and cannot be modified.
-        </p>
-      </div>
+      <PageHeader
+        title="Audit Logs"
+        subtitle="Audit logs are immutable and cannot be modified."
+      />
 
       {error && (
         <ErrorAlert

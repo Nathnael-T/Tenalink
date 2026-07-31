@@ -30,22 +30,6 @@ All endpoints accept `Authorization: Bearer <jwt>` for authenticated requests.
 | GET    | `/patients/{id}`           | Get patient by ID       | JWT   |
 | GET    | `/patients/by-user/{uid}`  | Get patient by user ID  | JWT   |
 
-## Appointments (`/api/v1/appointments`)
-
-| Method | Path                          | Description              | Auth  |
-|--------|-------------------------------|--------------------------|-------|
-| GET    | `/appointments/patient/{pid}` | Appointments by patient  | JWT   |
-| GET    | `/appointments/doctor/{did}`  | Appointments by doctor   | JWT   |
-| POST   | `/appointments`               | Create appointment       | JWT   |
-| PUT    | `/appointments/{id}/cancel`   | Cancel appointment       | JWT   |
-
-## Admin Appointments (`/api/v1/admin/appointments`)
-
-| Method | Path                                    | Description               | Auth  |
-|--------|-----------------------------------------|---------------------------|-------|
-| GET    | `/admin/appointments?page=0&size=20`    | List all (paginated)      | JWT   |
-| GET    | `/admin/appointments/overview`          | Appointment statistics    | JWT   |
-
 ## Prescriptions (`/api/v1/prescriptions`)
 
 | Method | Path                              | Description               | Auth  |
@@ -132,7 +116,6 @@ Gateway base URL: `http://localhost:8080`
 - `GET /api/v1/auth/me`
 - `GET|POST /api/v1/users/**`
 - `GET|POST /api/v1/records/**`
-- `GET|POST|PATCH /api/v1/appointments/**`
 - `GET|POST /api/v1/pharmacy/**`
 - `GET|POST /api/v1/admin/**`
 

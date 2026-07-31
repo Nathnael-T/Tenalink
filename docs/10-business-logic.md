@@ -8,7 +8,7 @@
 | **Patient** | Healthcare consumer profile linked to user | user-service |
 | **Doctor (Provider)** | Clinical provider profile linked to user | user-service |
 | **Hospital** | Healthcare facility in directory | hospital-service |
-| **Appointment** | Scheduled visit linking patient, doctor, hospital | appointment-service |
+| **Care workflow** | Scheduled visit linking patient, doctor, hospital | legacy placeholder |
 | **Prescription** | Medication order from doctor to patient | pharmacy-service |
 | **Medical Event** | Timeline entry (visit, lab, document, etc.) | medical-records-service |
 | **Audit Log** | Immutable admin action record | admin-service |
@@ -31,28 +31,28 @@
 
 ---
 
-## Workflow 2: Patient Books Appointment
+## Workflow 2: Patient Books Care workflow
 
 1. Patient navigates to `/patient/hospitals` → `GET /hospitals`
 2. Selects hospital → `/patient/doctors?hospital=...` → `GET /doctors?hospitalId=` (filter not applied server-side)
-3. Selects doctor → `/patient/book-appointment?doctor=...&hospital=...`
+3. Selects doctor → `/patient/book-care workflow?doctor=...&hospital=...`
 4. Page loads doctor (`GET /doctors/{id}`) and hospital (`GET /hospitals/{id}`)
 5. Patient enters date, time, reason
-6. Submit → `POST /appointments` with patient/doctor/hospital IDs and denormalized names
-7. `AppointmentService.create()`:
+6. Submit → `POST /care workflows` with patient/doctor/hospital IDs and denormalized names
+7. `Care workflowService.create()`:
    - Parses `date` + `time` to `scheduledAt`
    - Sets `status = SCHEDULED`
-   - Persists to `appointment_db`
+   - Persists to `legacy placeholder_db`
 8. Patient redirected or shown confirmation
 
 **Frontend sets status conceptually as "Pending"** but backend stores `SCHEDULED`.
 
 ---
 
-## Workflow 3: Doctor Reviews Appointments
+## Workflow 3: Doctor Reviews Care workflows
 
-1. Doctor opens `/doctor/appointments`
-2. `GET /appointments/doctor/{doctorId}` returns appointments sorted newest first
+1. Doctor opens `/doctor/care workflows`
+2. `GET /care workflows/doctor/{doctorId}` returns care workflows sorted newest first
 3. UI filters for `status === 'Pending'` — **will not match `SCHEDULED` from backend**
 4. Approve/Reject buttons call `handleStatusUpdate` which **logs a warning** — no backend endpoint called
 
@@ -99,8 +99,8 @@
 2. Dashboard fetches:
    - `GET /auth/users/stats` — platform-wide user counts
    - `GET /audit-logs` — recent activity (bug: expects array, API returns paginated `{ content }`)
-   - `GET /admin/appointments/overview` — platform-wide appointment stats
-3. Admin pages list doctors (`GET /auth/users/role/PROVIDER`), patients, appointments — **all platform-wide, not hospital-scoped**
+   - `GET /admin/care workflows/overview` — platform-wide care workflow stats
+3. Admin pages list doctors (`GET /auth/users/role/PROVIDER`), patients, care workflows — **all platform-wide, not hospital-scoped**
 
 ---
 
@@ -122,10 +122,10 @@
 
 ---
 
-## Workflow 10: Appointment Cancellation
+## Workflow 10: Care workflow Cancellation
 
-1. `PUT /appointments/{id}/cancel` called (from API module; usage in UI **Needs developer input**)
-2. Service loads appointment, sets `status = CANCELLED`, saves
+1. `PUT /care workflows/{id}/cancel` called (from API module; usage in UI **Needs developer input**)
+2. Service loads care workflow, sets `status = CANCELLED`, saves
 
 No validation of who may cancel (patient vs admin vs doctor).
 
@@ -150,7 +150,7 @@ Null/blank role → `ROLE_PATIENT`; otherwise uppercase with `ROLE_` prefix.
 
 `PatientController` / `DoctorController`: try lookup by domain ID first; on `ResourceNotFoundException`, retry by `userId`.
 
-### Appointment scheduling
+### Care workflow scheduling
 
 `date` and `time` are required strings; combined using system default timezone (`ZoneId.systemDefault()`).
 
@@ -162,7 +162,7 @@ Null/blank role → `ROLE_PATIENT`; otherwise uppercase with `ROLE_` prefix.
 |-------|------|
 | Login | identifier and password non-blank |
 | Register (frontend) | Fayda 12 chars, password ≥8 chars |
-| Appointment create | date and time required |
+| Care workflow create | date and time required |
 | User entity | email unique, fayda_id unique |
 | JPA | NOT NULL on core entity columns |
 
@@ -174,9 +174,9 @@ Null/blank role → `ROLE_PATIENT`; otherwise uppercase with `ROLE_` prefix.
 
 Stored as TEXT (JSON string). Mapped to structured `TimelineResponse` in `MedicalEventMapper`.
 
-### Denormalized appointment fields
+### Denormalized care workflow fields
 
-`patientName`, `doctorName`, `hospitalName`, `date`, `time` stored on appointment for display without cross-service joins.
+`patientName`, `doctorName`, `hospitalName`, `date`, `time` stored on care workflow for display without cross-service joins.
 
 ### Audit logs
 
@@ -187,7 +187,7 @@ Append-only creation via `POST /audit-logs`. No update/delete endpoints in contr
 ## Algorithms
 
 No complex algorithms identified. Sorting:
-- Appointments: `scheduledAt` DESC (repository queries)
+- Care workflows: `scheduledAt` DESC (repository queries)
 - Users: `createdAt` DESC
 - Audit logs: `timestamp` DESC
 - Frontend: manual sort in some pages; `sortByNewest` utility exists but is not used everywhere

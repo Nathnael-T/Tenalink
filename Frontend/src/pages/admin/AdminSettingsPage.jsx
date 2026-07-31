@@ -3,6 +3,7 @@ import { Settings } from 'lucide-react';
 import { getSystemConfigs } from '../../api/systemConfig.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function AdminSettingsPage() {
   const [configs, setConfigs] = useState([]);
@@ -28,10 +29,10 @@ export function AdminSettingsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-neutral-900 mb-2">System Settings</h1>
-        <p className="text-neutral-600">Platform configuration and system parameters</p>
-      </div>
+      <PageHeader
+        title="System Settings"
+        subtitle="Platform configuration and system parameters"
+      />
 
       {error && <ErrorAlert message={error} onRetry={() => window.location.reload()} />}
 

@@ -13,10 +13,10 @@ This document covers sections 12–14 of the documentation requirements.
 | Element | Convention | Example |
 |---------|------------|---------|
 | Packages | `com.tenalink.{domain}.{layer}` | `com.tenalink.auth.service` |
-| Entities | `{Name}Entity` | `UserEntity`, `AppointmentEntity` |
+| Entities | `{Name}Entity` | `UserEntity`, `Care workflowEntity` |
 | DTOs | `{Domain}Dto` with inner classes | `AuthDto.LoginRequest` |
 | Repositories | `{Entity}Repository` | `UserRepository` |
-| Services | `{Domain}Service` | `AppointmentService` |
+| Services | `{Domain}Service` | `Care workflowService` |
 | Controllers | `{Domain}Controller` | `HospitalController` |
 | Migrations | `V{n}__{description}.sql` | `V2__add_patient_fields.sql` |
 | DB roles | `ROLE_{NAME}` | `ROLE_PATIENT` |
@@ -26,7 +26,7 @@ This document covers sections 12–14 of the documentation requirements.
 | Element | Convention | Example |
 |---------|------------|---------|
 | Components | PascalCase files and exports | `AdminDashboardPage.jsx` |
-| API modules | `{domain}.api.js` | `appointments.api.js` |
+| API modules | `{domain}.api.js` | `care workflows.api.js` |
 | Hooks | `use{Name}` | `useAuth`, `useLanguage` |
 | Constants | `ROLES`, UPPER_SNAKE | `constants/roles.js` |
 | Routes | `{Role}Routes.jsx` | `DoctorRoutes.jsx` |
@@ -100,7 +100,7 @@ Each service has `GlobalExceptionHandler` (`@RestControllerAdvice`).
 | `ResourceNotFoundException` | 404 |
 | Generic `Exception` | 500 |
 
-### appointment, pharmacy, medical-records, admin, hospital services
+### care workflow, pharmacy, medical-records, admin, hospital services
 
 | Exception | HTTP status |
 |-----------|-------------|
@@ -148,7 +148,7 @@ No standardized validation error format (e.g., field-level errors). Missing Bean
 |----------|----------|
 | Invalid login | 401, message "Invalid credentials" |
 | User not found (context) | 500 from ContextController |
-| Appointment not found on cancel | 400 RuntimeException |
+| Care workflow not found on cancel | 400 RuntimeException |
 | Patient not found | 404 |
 | Network failure (frontend) | Error message from axios |
 | Token expired | **Needs developer input** — likely 401 on protected calls if enforced |

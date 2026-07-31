@@ -39,7 +39,7 @@ public class AdminDataSeeder implements CommandLineRunner {
         UUID adminId = UUID.randomUUID(); // Use a random admin ID for demo
         createAuditIfMissing(adminId, "USER_CREATED", "users", "Sarah Johnson", "ROLE_ADMIN", Instant.now().minus(7, ChronoUnit.DAYS));
         createAuditIfMissing(adminId, "USER_CREATED", "users", "Sarah Johnson", "ROLE_ADMIN", Instant.now().minus(6, ChronoUnit.DAYS));
-        createAuditIfMissing(adminId, "APPOINTMENT_CREATED", "appointments", "System", "ROLE_SYSTEM", Instant.now().minus(5, ChronoUnit.DAYS));
+        createAuditIfMissing(adminId, "CARE_EVENT_CREATED", "care-events", "System", "ROLE_SYSTEM", Instant.now().minus(5, ChronoUnit.DAYS));
         createAuditIfMissing(adminId, "PRESCRIPTION_CREATED", "prescriptions", "Dr. Emily Carter", "ROLE_PROVIDER", Instant.now().minus(4, ChronoUnit.DAYS));
         createAuditIfMissing(adminId, "CONFIG_UPDATED", "system_config", "Michael Chen", "ROLE_ADMIN", Instant.now().minus(3, ChronoUnit.DAYS));
         createAuditIfMissing(adminId, "HOSPITAL_UPDATED", "hospitals", "Sarah Johnson", "ROLE_ADMIN", Instant.now().minus(2, ChronoUnit.DAYS));
@@ -64,7 +64,7 @@ public class AdminDataSeeder implements CommandLineRunner {
         createConfigIfMissing("platform.max-upload-size", "10485760", "Max file upload size in bytes (10MB)");
         createConfigIfMissing("platform.maintenance-mode", "false", "Whether the platform is in maintenance mode");
         createConfigIfMissing("platform.registration-enabled", "true", "Whether new user registration is enabled");
-        createConfigIfMissing("platform.appointment-booking-enabled", "true", "Whether patients can book appointments");
+        createConfigIfMissing("platform.care-booking-enabled", "true", "Whether patients can request care services");
         createConfigIfMissing("platform.notification-email-enabled", "false", "Whether email notifications are sent");
         createConfigIfMissing("platform.default-timezone", "Africa/Addis_Ababa", "Default timezone for the platform");
         createConfigIfMissing("platform.support-email", "support@tenalink.com", "Platform support contact email");

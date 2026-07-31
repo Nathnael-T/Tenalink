@@ -9,7 +9,6 @@ COPY gateway-service/pom.xml gateway-service/
 COPY auth-service/pom.xml auth-service/
 COPY user-service/pom.xml user-service/
 COPY medical-records-service/pom.xml medical-records-service/
-COPY appointment-service/pom.xml appointment-service/
 COPY pharmacy-service/pom.xml pharmacy-service/
 COPY admin-service/pom.xml admin-service/
 COPY hospital-service/pom.xml hospital-service/
@@ -22,7 +21,6 @@ COPY gateway-service/src gateway-service/src
 COPY auth-service/src auth-service/src
 COPY user-service/src user-service/src
 COPY medical-records-service/src medical-records-service/src
-COPY appointment-service/src appointment-service/src
 COPY pharmacy-service/src pharmacy-service/src
 COPY admin-service/src admin-service/src
 COPY hospital-service/src hospital-service/src

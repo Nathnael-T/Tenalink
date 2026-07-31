@@ -11,6 +11,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { getHospitals, createHospital, deleteHospital as apiDeleteHospital } from '../../api/hospitals.api';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function SuperAdminHospitalsPage() {
   const [hospitals, setHospitals] = useState([]);
@@ -121,19 +122,11 @@ export function SuperAdminHospitalsPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Hospital Management</h1>
-          <p className="mt-2 text-slate-600">Manage all hospitals across the platform.</p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700"
-        >
-          <Plus size={18} />
-          Add Hospital
-        </button>
-      </div>
+      <PageHeader
+        title="Hospital Management"
+        subtitle="Manage all hospitals across the platform."
+        action={{ label: 'Add Hospital', onClick: () => setShowForm(!showForm) }}
+      />
 
       {error && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">

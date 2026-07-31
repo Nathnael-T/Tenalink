@@ -215,9 +215,9 @@ Content-Type: application/json
 
 ---
 
-## Appointments — `/appointments`
+## Care workflows — `/care workflows`
 
-### POST `/appointments`
+### POST `/care workflows`
 
 **Request body:**
 ```json
@@ -234,50 +234,50 @@ Content-Type: application/json
 }
 ```
 
-**Response `200`:** `AppointmentEntity` with `status: "SCHEDULED"`
+**Response `200`:** `Care workflowEntity` with `status: "SCHEDULED"`
 
 **Validation:** `date` and `time` required (service throws if missing)
 
 ---
 
-### GET `/appointments/patient/{patientId}`
+### GET `/care workflows/patient/{patientId}`
 
-**Response `200`:** `AppointmentEntity[]` sorted `scheduledAt` DESC
-
----
-
-### GET `/appointments/doctor/{doctorId}`
-
-**Response `200`:** `AppointmentEntity[]` sorted `scheduledAt` DESC
+**Response `200`:** `Care workflowEntity[]` sorted `scheduledAt` DESC
 
 ---
 
-### PUT `/appointments/{id}/cancel`
+### GET `/care workflows/doctor/{doctorId}`
 
-**Purpose:** Cancel appointment (`status → CANCELLED`)
+**Response `200`:** `Care workflowEntity[]` sorted `scheduledAt` DESC
+
+---
+
+### PUT `/care workflows/{id}/cancel`
+
+**Purpose:** Cancel care workflow (`status → CANCELLED`)
 
 **Response `200`:** Empty body
 
 ---
 
-## Admin Appointments — `/admin/appointments`
+## Admin Care workflows — `/admin/care workflows`
 
-### GET `/admin/appointments`
+### GET `/admin/care workflows`
 
 **Query:** `page` (0), `size` (20)
 
-**Response:** Paginated `AppointmentEntity`, sorted `scheduledAt` DESC
+**Response:** Paginated `Care workflowEntity`, sorted `scheduledAt` DESC
 
 **Scope:** Platform-wide (no hospital filter)
 
 ---
 
-### GET `/admin/appointments/overview`
+### GET `/admin/care workflows/overview`
 
 **Response `200`:**
 ```json
 {
-  "totalAppointments": 12,
+  "totalCare workflows": 12,
   "scheduled": 5,
   "completed": 5,
   "cancelled": 2,
@@ -415,7 +415,7 @@ Content-Type: application/json
 
 | Status | Typical cause |
 |--------|---------------|
-| 400 | `RuntimeException` in appointment/pharmacy/medical/admin/hospital services |
+| 400 | `RuntimeException` in care workflow/pharmacy/medical/admin/hospital services |
 | 401 | `AuthenticationFailedException` (auth-service login) |
 | 404 | Patient/doctor not found (user-service) |
 | 409 | Duplicate user (auth-service) |
@@ -440,7 +440,7 @@ Accessible on each service's direct port, not necessarily through gateway unless
 |-------------|----------------|
 | `/api/v1/auth/**`, `/api/v1/context/**` | auth-service |
 | `/api/v1/users/**`, `/api/v1/patients/**`, `/api/v1/doctors/**` | user-service |
-| `/api/v1/appointments/**`, `/api/v1/admin/appointments/**` | appointment-service |
+| `/api/v1/care workflows/**`, `/api/v1/admin/care workflows/**` | legacy placeholder |
 | `/api/v1/prescriptions/**` | pharmacy-service |
 | `/api/v1/records/**` | medical-records-service |
 | `/api/v1/audit-logs/**`, `/api/v1/system-config/**` | admin-service |
@@ -455,9 +455,9 @@ Accessible on each service's direct port, not necessarily through gateway unless
 | Frontend call | Issue |
 |---------------|-------|
 | `PUT /patients/{id}` | Backend only has `POST /patients/{id}` |
-| `PUT /appointments/{id}` | No generic update endpoint |
-| `PATCH /appointments/{id}/status` | Not implemented in backend |
-| `DELETE /appointments/{id}` | Not implemented in backend |
+| `PUT /care workflows/{id}` | No generic update endpoint |
+| `PATCH /care workflows/{id}/status` | Not implemented in backend |
+| `DELETE /care workflows/{id}` | Not implemented in backend |
 | `PUT /prescriptions/{id}` | Not implemented |
 | `DELETE /prescriptions/{id}` | Not implemented |
 

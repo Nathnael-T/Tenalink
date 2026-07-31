@@ -1,9 +1,5 @@
 -- Tenalink Development Dataset: appointment_db
-BEGIN;
-
-TRUNCATE TABLE appointments RESTART IDENTITY CASCADE;
-
-INSERT INTO appointments (id, patient_id, doctor_id, hospital_id, scheduled_at, status, patient_name, doctor_name, hospital_name, reason, date, time) VALUES
+-- This database is intentionally empty because the appointment service has been decommissioned.
 ('70000001-0000-4000-8000-000000000001', '50000001-0000-4000-8000-000000000001', '30000001-0000-4000-8000-000000000001', '60000001-0001-4001-8001-000000000001', '2025-08-05 09:00:00+03', 'COMPLETED', 'Almaz Tesfaye', 'Dr. Kidist Assefa', 'Addis General Hospital', 'Annual physical', '2025-08-05', '09:00'),
 ('70000001-0000-4000-8000-000000000002', '50000001-0000-4000-8000-000000000002', '30000001-0000-4000-8000-000000000002', '60000001-0001-4001-8001-000000000002', '2025-09-06 10:00:00+03', 'COMPLETED', 'Bekele Assefa', 'Dr. Solomon Hailu', 'St. Mary Specialty Clinic', 'Follow-up visit', '2025-09-06', '10:00'),
 ('70000001-0000-4000-8000-000000000003', '50000001-0000-4000-8000-000000000003', '30000001-0000-4000-8000-000000000003', '60000001-0001-4001-8001-000000000003', '2025-10-07 11:00:00+03', 'COMPLETED', 'Chaltu Mengistu', 'Dr. Eden Mekonnen', 'Northern Emergency Center', 'Chest pain evaluation', '2025-10-07', '11:00'),

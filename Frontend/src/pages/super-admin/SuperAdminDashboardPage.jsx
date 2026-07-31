@@ -12,6 +12,7 @@ import { getAuditLogs } from '../../api/admin.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
 import EmptyState from '../../components/shared/EmptyState';
 import { SkeletonStatCard } from '../../components/shared/SkeletonCard';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function SuperAdminDashboardPage() {
   const [stats, setStats] = useState(null);
@@ -52,10 +53,10 @@ export function SuperAdminDashboardPage() {
   if (loading) {
     return (
       <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Super Admin Dashboard</h1>
-          <p className="mt-2 text-slate-600">Platform-wide overview and management.</p>
-        </div>
+        <PageHeader
+          title="Super Admin Dashboard"
+          subtitle="Platform-wide overview and management."
+        />
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
           <SkeletonStatCard />
           <SkeletonStatCard />
@@ -69,14 +70,10 @@ export function SuperAdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">
-          Platform Management Dashboard
-        </h1>
-        <p className="mt-2 text-slate-600">
-          Platform-wide overview and management.
-        </p>
-      </div>
+      <PageHeader
+        title="Platform Management Dashboard"
+        subtitle="Platform-wide overview and management."
+      />
 
       {error && (
         <ErrorAlert

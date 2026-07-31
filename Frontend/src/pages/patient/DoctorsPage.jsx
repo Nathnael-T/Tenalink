@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getDoctors } from '../../api/doctors.api';
 import { getHospitalById } from '../../api/hospitals.api';
 import ErrorAlert from '../../components/shared/ErrorAlert';
+import { PageHeader } from '../../components/shared/PageHeader';
 
 export function DoctorsPage() {
   const [searchParams] = useSearchParams();
@@ -62,24 +63,11 @@ export function DoctorsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <Link
-          to="/patient/hospitals"
-          className="inline-block rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800"
-        >
-          Back to Hospitals
-        </Link>
-
-        <h1 className="mt-3 text-3xl font-bold text-slate-900">
-          Available Doctors
-        </h1>
-
-        <p className="mt-2 text-slate-600">
-          {hospital
-            ? `Doctors at ${hospital.name}`
-            : 'Select a hospital to view available doctors.'}
-        </p>
-      </div>
+      <PageHeader
+        title="Available Doctors"
+        subtitle={hospital ? `Doctors at ${hospital.name}` : 'Select a hospital to view available doctors.'}
+        secondaryAction={{ label: 'Back to Hospitals', to: '/patient/hospitals' }}
+      />
 
       {loading ? (
         <div className="flex justify-center rounded-xl border bg-white py-12">
@@ -150,12 +138,9 @@ export function DoctorsPage() {
               <p className="mt-2 text-sm text-slate-600">
                 Availability: {doctor.availability}</p>
 
-              <Link
-                to={`/patient/book-appointment?doctor=${doctor.id}&hospital=${hospitalId}`}
-                className="mt-4 inline-block w-full rounded-lg bg-teal-600 px-4 py-2 text-center text-white hover:bg-teal-700"
-              >
-                Book Appointment
-              </Link>
+              <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-center text-sm text-slate-600">
+                Available for consultation
+              </div>
             </div>
           ))}
         </div>
